@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мое Портфолио</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Тёмный фон -->
+    <div class="dark-overlay"></div>
+
+    <!-- Навигационные точки -->
+    <div class="scroll-dots">
+        <div class="dot" data-section="home"></div>
+        <div class="dot" data-section="about"></div>
+        <div class="dot" data-section="skills"></div>
+        <div class="dot" data-section="projects"></div>
+        <div class="dot" data-section="contact"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo text-glitch">ПОРТФОЛИО</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="flicker-effect">Главная</a></li>
+                <li><a href="#about" class="flicker-effect">Обо мне</a></li>
+                <li><a href="#skills" class="flicker-effect">Навыки</a></li>
+                <li><a href="#projects" class="flicker-effect">Проекты</a></li>
+                <li><a href="#contact" class="flicker-effect">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <!-- Матричный дождь -->
+        <div class="matrix-container" id="matrix-rain"></div>
+        
+        <!-- Цифровая сетка -->
+        <div class="grid-overlay"></div>
+        
+        <!-- Неоновые линии -->
+        <div class="neon-lines">
+            <div class="neon-line" style="top: 20%; left: 0; animation-delay: 0s;"></div>
+            <div class="neon-line" style="top: 40%; left: 0; animation-delay: 2s;"></div>
+            <div class="neon-line" style="top: 60%; left: 0; animation-delay: 4s;"></div>
+            <div class="neon-line" style="top: 80%; left: 0; animation-delay: 6s;"></div>
+        </div>
+        
+        <!-- Технологичные круги -->
+        <div class="tech-circles">
+            <div class="tech-circle" style="top: 30%; left: 20%; width: 300px; height: 300px; animation-delay: 0s;"></div>
+            <div class="tech-circle" style="top: 60%; left: 70%; width: 250px; height: 250px; animation-delay: 2s; background: radial-gradient(circle, rgba(255,0,255,0.5) 0%, rgba(0,0,0,0) 70%);"></div>
+            <div class="tech-circle" style="top: 10%; left: 60%; width: 200px; height: 200px; animation-delay: 4s; background: radial-gradient(circle, rgba(0,255,255,0.5) 0%, rgba(0,0,0,0) 70%);"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="gradient-text glitch" title="Привет, я Ботир">Привет, я <span class="highlight">Billy</span></h1>
+            <p class="subtitle typewriter">Разработчик | Дизайнер | Креативщик</p>
+            <a href="#contact" class="cta-button electric-effect" data-text="Связаться со мной">Связаться со мной</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>ОБО МНЕ</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>Здесь вы можете написать о себе, своем опыте и целях. Создаю чистый, минималистичный и функциональный код.</p>
+                <div class="stats">
+                    <div class="stat-item digital-noise">
+                        <span class="number text-glitch">3+</span>
+                        <span class="label">Года опыта</span>
+                    </div>
+                    <div class="stat-item digital-noise">
+                        <span class="number text-glitch">20+</span>
+                        <span class="label">Проектов</span>
+                    </div>
+                </div>
+                <div class="about-buttons" style="margin-top: 30px; display: flex; gap: 20px; justify-content: center;">
+                    <a href="#" class="data-slicer" style="padding: 10px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; text-decoration: none;">Резюме</a>
+                    <a href="#" class="pixel-dissolve" style="padding: 10px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; text-decoration: none;">Скачать CV</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <h2>НАВЫКИ</h2>
+        <div class="skills-grid">
+            <div class="skill-card digital-noise">
+                <i class="fas fa-code flicker-effect"></i>
+                <h3 class="text-glitch">Веб-разработка</h3>
+                <p>HTML, CSS, JavaScript</p>
+            </div>
+            <div class="skill-card digital-noise">
+                <i class="fas fa-paint-brush flicker-effect"></i>
+                <h3 class="text-glitch">Дизайн</h3>
+                <p>UI/UX, Figma</p>
+            </div>
+            <div class="skill-card digital-noise">
+                <i class="fas fa-mobile-alt flicker-effect"></i>
+                <h3 class="text-glitch">Адаптивный дизайн</h3>
+                <p>Mobile-first подход</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <h2>ПРОЕКТЫ</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="https://via.placeholder.com/300x200/121212/ffffff?text=ПРОЕКТ+1" alt="Проект 1">
+                <h3 class="text-glitch">Название проекта</h3>
+                <p>Описание проекта и использованные технологии</p>
+                <a href="#" class="project-link pixel-decay" data-text="ПРОСМОТРЕТЬ">ПРОСМОТРЕТЬ</a>
+            </div>
+            <div class="project-card">
+                <img src="https://via.placeholder.com/300x200/121212/ffffff?text=ПРОЕКТ+2" alt="Проект 2">
+                <h3 class="text-glitch">Название проекта</h3>
+                <p>Описание проекта и использованные технологии</p>
+                <a href="#" class="project-link hologram-effect" data-text="ПРОСМОТРЕТЬ">ПРОСМОТРЕТЬ</a>
+            </div>
+            <div class="project-card">
+                <img src="https://via.placeholder.com/300x200/121212/ffffff?text=ПРОЕКТ+3" alt="Проект 3">
+                <h3 class="text-glitch">Название проекта</h3>
+                <p>Описание проекта и использованные технологии</p>
+                <a href="#" class="project-link data-slicer" data-text="ПРОСМОТРЕТЬ">ПРОСМОТРЕТЬ</a>
+            </div>
+            <div class="project-card">
+                <img src="https://via.placeholder.com/300x200/121212/ffffff?text=ПРОЕКТ+4" alt="Проект 4">
+                <h3 class="text-glitch">Название проекта</h3>
+                <p>Описание проекта и использованные технологии</p>
+                <a href="#" class="project-link volume-distort" data-text="ПРОСМОТРЕТЬ">ПРОСМОТРЕТЬ</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>СВЯЗАТЬСЯ</h2>
+        <div class="contact-content">
+            <form id="contact-form">
+                <input type="text" placeholder="ИМЯ" required>
+                <input type="email" placeholder="EMAIL" required>
+                <textarea placeholder="СООБЩЕНИЕ" required></textarea>
+                <button type="submit" class="submit-button vhs-effect" data-text="ОТПРАВИТЬ">ОТПРАВИТЬ</button>
+            </form>
+            <div class="social-links">
+                <a href="#" class="signal-distortion"><i class="fab fa-github"></i></a>
+                <a href="#" class="vhs-effect"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="electric-effect"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="shadow-glitch" data-text="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="digital-hack" data-text="Discord"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 | <span class="text-glitch">ПОРТФОЛИО</span> | ВСЕ ПРАВА ЗАЩИЩЕНЫ</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
