@@ -1,0 +1,50 @@
+# Переменные окружения и конфиденциальные данные
+.env
+*.env
+.env.*
+!.env.example
+
+# Папки и файлы Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+ENV/
+.venv
+
+# Файлы сообщений (для тестирования)
+server/messages/
+messages/
+
+# Логи
+*.log
+logs/
+
+# VS Code
+.vscode/
+.vs/
+
+# Прочее
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.bak
+.tmp
+node_modules/ 
