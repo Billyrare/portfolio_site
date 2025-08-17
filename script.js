@@ -2,6 +2,11 @@
 let csrfToken = '';
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Убираем якорь из URL при загрузке, чтобы страница всегда открывалась наверху.
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+
     // Получаем CSRF-токен при загрузке страницы
     fetch('/get-csrf-token')
         .then(res => res.json())
@@ -21,11 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
     initMobileMenu();
     initImageModal();
     initCountersAnimation();
+    initCodeRain();
+    initThemeToggle();
+    initParticleCanvas();
 });
 
 // Функция для загрузки и отображения проектов
 function loadProjects() {
-    fetch('/api/projects')
+    // Для GitHub Pages мы загружаем статический JSON-файл напрямую,
+    // а не обращаемся к API, которого там нет.
+    fetch('projects.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -68,94 +78,46 @@ function loadProjects() {
 function initThemeToggle() {
     const themeToggleBtn = document.getElementById('theme-toggle');
     const transitionOverlay = document.getElementById('transition-overlay');
+    if (!themeToggleBtn || !transitionOverlay) return;
+
     const htmlElement = document.documentElement;
     
-    // Проверяем сохраненную тему в localStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        htmlElement.setAttribute('data-theme', savedTheme);
-    }
-    
-    // Обработчик нажатия на кнопку переключения темы
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', function() {
-            // Получаем текущую тему
-            const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            // Активируем анимацию перехода
-            transitionOverlay.classList.add('active');
-            
-            // После небольшой задержки меняем тему
-            setTimeout(() => {
-                // Устанавливаем новую тему
-                htmlElement.setAttribute('data-theme', newTheme);
-                
-                // Сохраняем выбор пользователя
-                localStorage.setItem('theme', newTheme);
-                
-                // Добавляем специальные эффекты для темной темы
-                if (newTheme === 'dark') {
-                    applyDarkThemeEffects();
-                } else {
-                    applyLightThemeEffects();
-                }
-                
-                // Завершаем анимацию перехода
-                setTimeout(() => {
-                    transitionOverlay.classList.remove('active');
-                }, 300);
-            }, 200);
-        });
-    }
-    
-    // Применяем эффекты для темной темы, если она активна
-    if (htmlElement.getAttribute('data-theme') === 'dark') {
-        applyDarkThemeEffects();
-    }
-}
+    const updateIcon = (theme) => {
+        const moonIcon = themeToggleBtn.querySelector('.fa-moon');
+        const sunIcon = themeToggleBtn.querySelector('.fa-sun');
+        if (!moonIcon || !sunIcon) return;
 
-// Функция для добавления специальных эффектов темной темы
-function applyDarkThemeEffects() {
-    // Усиливаем свечение неоновых линий
-    const neonLines = document.querySelectorAll('.neon-line');
-    neonLines.forEach(line => {
-        line.style.opacity = '0.3';
-    });
-    
-    // Изменяем интенсивность и цвет теней
-    const animatedShapes = document.querySelectorAll('.animated-shape');
-    animatedShapes.forEach(shape => {
-        shape.style.filter = 'blur(1.5px)';
-        shape.style.opacity = '0.25';
-    });
-    
-    // Настраиваем специальные эффекты для темных тем
-    const techCircles = document.querySelectorAll('.tech-circle');
-    techCircles.forEach(circle => {
-        circle.style.borderWidth = '2px';
-        circle.style.opacity = '0.2';
-    });
-}
+        if (theme === 'dark') {
+            moonIcon.style.display = 'none';
+            sunIcon.style.display = 'inline-block';
+        } else {
+            moonIcon.style.display = 'inline-block';
+            sunIcon.style.display = 'none';
+        }
+    };
 
-// Функция для добавления специальных эффектов светлой темы
-function applyLightThemeEffects() {
-    // Возвращаем стандартные значения
-    const neonLines = document.querySelectorAll('.neon-line');
-    neonLines.forEach(line => {
-        line.style.opacity = '0.2';
-    });
+    // Устанавливаем правильную иконку при загрузке, основываясь на атрибуте,
+    // который уже установлен инлайн-скриптом в <head>.
+    const initialTheme = htmlElement.getAttribute('data-theme') || 'dark';
+    updateIcon(initialTheme);
     
-    const animatedShapes = document.querySelectorAll('.animated-shape');
-    animatedShapes.forEach(shape => {
-        shape.style.filter = 'blur(1px)';
-        shape.style.opacity = '0.2';
-    });
-    
-    const techCircles = document.querySelectorAll('.tech-circle');
-    techCircles.forEach(circle => {
-        circle.style.borderWidth = '1px';
-        circle.style.opacity = '0.15';
+    themeToggleBtn.addEventListener('click', function() {
+        const currentTheme = htmlElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // 1. Активируем оверлей, чтобы он плавно появился
+        transitionOverlay.classList.add('active');
+        
+        // 2. Ждем, пока оверлей полностью покроет экран (время = transition-duration в CSS)
+        setTimeout(() => {
+            // 3. Меняем тему, пока экран скрыт
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+            
+            // 4. С помощью requestAnimationFrame убираем оверлей, чтобы он плавно исчез
+            requestAnimationFrame(() => transitionOverlay.classList.remove('active'));
+        }, 800); // Это время должно совпадать с transition в .theme-transition-overlay
     });
 }
 
@@ -400,6 +362,88 @@ function initCursor() {
     });
 }
 
+// Функция для создания фона с анимированными частицами
+function initParticleCanvas() {
+    const canvas = document.getElementById('particle-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particlesArray;
+
+    // Устанавливаем размер холста
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Класс для частиц
+    class Particle {
+        constructor(x, y, directionX, directionY, size, color) {
+            this.x = x;
+            this.y = y;
+            this.directionX = directionX;
+            this.directionY = directionY;
+            this.size = size;
+            this.color = color;
+        }
+
+        // Метод для отрисовки частицы
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+
+        // Метод для обновления положения частицы
+        update() {
+            if (this.x > canvas.width || this.x < 0) {
+                this.directionX = -this.directionX;
+            }
+            if (this.y > canvas.height || this.y < 0) {
+                this.directionY = -this.directionY;
+            }
+            this.x += this.directionX;
+            this.y += this.directionY;
+            this.draw();
+        }
+    }
+
+    // Создаем массив частиц
+    function init() {
+        particlesArray = [];
+        let numberOfParticles = (canvas.height * canvas.width) / 12000;
+        for (let i = 0; i < numberOfParticles; i++) {
+            let size = (Math.random() * 1.5) + 0.5;
+            let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+            let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+            let directionX = (Math.random() * .4) - .2;
+            let directionY = (Math.random() * .4) - .2;
+            let color = 'rgba(217, 191, 159, 0.6)';
+
+            particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+        }
+    }
+
+    // Анимационный цикл
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update();
+        }
+    }
+
+    // Обработчик изменения размера окна
+    window.addEventListener('resize', () => {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        init();
+    });
+
+    init();
+    animate();
+}
+
 // Функция для анимации счетчиков при появлении на экране
 function initCountersAnimation() {
     const counters = document.querySelectorAll('.counter');
@@ -450,6 +494,47 @@ function initCountersAnimation() {
     counters.forEach(counter => {
         observer.observe(counter);
     });
+}
+
+// Функция для создания фоновой анимации "дождя из кода"
+function initCodeRain() {
+    const container = document.getElementById('code-rain-container');
+    if (!container) return;
+
+    // Набор символов для анимации
+    const chars = '0123456789ABCDEF{}[]()<>/?|*&^%$#@!';
+    // Определяем количество колонок в зависимости от ширины экрана
+    const numberOfColumns = Math.floor(window.innerWidth / 25);
+
+    // Определяем, какая тема активна, для настройки прозрачности
+    const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+    const opacityRange = isDarkTheme ? { min: 0.05, range: 0.1 } : { min: 0.15, range: 0.2 };
+
+    // Очищаем контейнер на случай повторной инициализации (например, при ресайзе)
+    container.innerHTML = '';
+
+    for (let i = 0; i < numberOfColumns; i++) {
+        const column = document.createElement('div');
+        column.className = 'code-column';
+
+        // Генерируем случайный текст для колонки
+        let columnText = '';
+        const columnHeight = Math.floor(Math.random() * 30) + 20; // Случайная длина от 20 до 50 символов
+        for (let j = 0; j < columnHeight; j++) {
+            columnText += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        column.textContent = columnText;
+
+        // Задаем случайные параметры для каждой колонки
+        column.style.left = `${Math.random() * 100}vw`;
+        const duration = Math.random() * 20 + 15; // Длительность падения от 15 до 35 секунд
+        const delay = Math.random() * 15; // Задержка старта от 0 до 15 секунд
+        column.style.animationDuration = `${duration}s`;
+        column.style.animationDelay = `${delay}s`;
+        column.style.opacity = (Math.random() * opacityRange.range + opacityRange.min).toFixed(2);
+
+        container.appendChild(column);
+    }
 }
 
 // Функция для управления состоянием хедера при прокрутке

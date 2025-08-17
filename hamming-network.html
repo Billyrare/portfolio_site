@@ -6,6 +6,20 @@
     <title>Проект | Сеть Хэмминга для распознавания образов</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Скрипт для предотвращения "вспышки" при смене темы -->
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme) {
+                    document.documentElement.setAttribute('data-theme', theme);
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <!-- Навигационная панель -->
@@ -14,11 +28,11 @@
             <div class="spacer"></div>
             <ul class="nav-links">
                 <button class="mobile-menu-close" aria-label="Закрыть меню">&times;</button>
-                <li><a href="/">Главная</a></li>
-                <li><a href="/#projects">Проекты</a></li>
-                <li><a href="/#about">Обо мне</a></li>
-                <li><a href="/#services">Услуги</a></li>
-                <li><a href="/#contact">Контакт</a></li>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="index.html#projects">Проекты</a></li>
+                <li><a href="index.html#about">Обо мне</a></li>
+                <li><a href="index.html#services">Услуги</a></li>
+                <li><a href="index.html#contact">Контакт</a></li>
             </ul>
             <button class="mobile-menu-toggle" aria-label="Открыть меню">
                 <i class="fas fa-bars"></i>
@@ -168,7 +182,7 @@ reference_patterns = [
 # ----------------------------------------
 </code></pre>
 
-        <a href="/" class="back-link">&larr; Вернуться на главную</a>
+        <a href="index.html" class="back-link">&larr; Вернуться на главную</a>
     </div>
 
     <!-- Модальное окно для изображений -->
@@ -178,6 +192,15 @@ reference_patterns = [
             <img id="modalImage" src="" alt="Modal Image">
         </div>
     </div>
+
+    <!-- Добавляем кнопку переключения темы -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Добавляем оверлей для анимации переключения -->
+    <div class="theme-transition-overlay" id="transition-overlay"></div>
 
     <script src="script.js"></script>
 
