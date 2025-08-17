@@ -2212,3 +2212,54 @@ img-comparison-slider img {
     color: #bbb;
     text-decoration: none;
 }
+
+/* --- Улучшения для мобильных устройств (320-375px) --- */
+@media (max-width: 375px) {
+  .container, .main-content, .projects-grid, .about-content, .contact-content, .footer-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  h1 {
+    font-size: 1.7rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  .button, .submit-button {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1rem;
+    padding: 1rem 1.2rem;
+  }
+  .nav-links.active a {
+    font-size: 1.2rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .footer-socials {
+    gap: 1rem;
+  }
+}
+
+/* --- Убираем горизонтальный скролл на всех устройствах --- */
+html, body {
+  overflow-x: hidden;
+}
+
+/* --- Плавная анимация для мобильного меню --- */
+@media (max-width: 768px) {
+  .nav-links {
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .nav-links.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
