@@ -217,26 +217,30 @@ function initTextScramble() {
     }
 }
 
-// Анимация появления элементов при прокрутке
+// Анимация появления элементов при прокрутке с помощью IntersectionObserver
 function initRevealOnScroll() {
     const revealElements = document.querySelectorAll('.reveal');
-    
-    function checkReveal() {
-        revealElements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
-            
-            if (elementTop < windowHeight - 150) {
-                element.classList.add('revealed');
+    if (revealElements.length === 0) return;
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            // Когда элемент входит в область видимости
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                // Прекращаем наблюдение за элементом после того, как он появился,
+                // чтобы не тратить ресурсы.
+                observer.unobserve(entry.target);
             }
         });
-    }
-    
-    // Проверяем при загрузке
-    checkReveal();
-    
-    // Проверяем при скролле
-    window.addEventListener('scroll', checkReveal);
+    }, {
+        // Начинаем анимацию, когда элемент находится в 100px от нижней границы экрана
+        rootMargin: '0px 0px -100px 0px',
+        threshold: 0.01 // Сработает как только хотя бы 1% элемента станет виден
+    });
+
+    revealElements.forEach(element => {
+        revealObserver.observe(element);
+    });
 }
 
 // Плавная прокрутка к якорям
