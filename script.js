@@ -257,8 +257,12 @@ function initSmoothScroll() {
                 const targetSection = document.querySelector(href);
 
                 if (targetSection) {
+                    // Компенсация фиксированного header
+                    const header = document.querySelector('.header');
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const sectionTop = targetSection.offsetTop - headerHeight;
                     window.scrollTo({
-                        top: targetSection.offsetTop,
+                        top: sectionTop,
                         behavior: 'smooth'
                     });
                     
