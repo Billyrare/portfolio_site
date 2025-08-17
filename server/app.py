@@ -29,6 +29,10 @@ parent_dir = os.path.abspath(os.path.join(app.root_path, '..'))
 def index():
     return send_from_directory(parent_dir, 'index.html')
 
+@app.route('/index.html')
+def index_page():
+    return send_from_directory(parent_dir, 'index.html')
+
 @app.route('/styles.css')
 def styles():
     return send_from_directory(parent_dir, 'styles.css')
@@ -52,6 +56,11 @@ def hamming_network_page():
 @app.route('/recurrent-network.html')
 def recurrent_network_page():
     return send_from_directory(parent_dir, 'recurrent-network.html')
+
+@app.route('/projects.json')
+def projects_json():
+    """Отдает статический файл projects.json"""
+    return send_from_directory(parent_dir, 'projects.json')
 
 @app.route('/images/<path:filename>')
 def serve_image(filename):
