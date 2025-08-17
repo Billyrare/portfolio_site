@@ -1,6 +1,60 @@
 // Инициализация при загрузке страницы
 let csrfToken = '';
 
+class TextScramble {
+    constructor(el) {
+        this.el = el;
+        this.chars = '!<>-_\\/[]{}—=+*^?#________';
+        this.update = this.update.bind(this);
+    }
+    setText(newText) {
+        const oldText = this.el.innerText;
+        const length = Math.max(oldText.length, newText.length);
+        const promise = new Promise(resolve => (this.resolve = resolve));
+        this.queue = [];
+        for (let i = 0; i < length; i++) {
+            const from = oldText[i] || '';
+            const to = newText[i] || '';
+            const start = Math.floor(Math.random() * 40);
+            const end = start + Math.floor(Math.random() * 40);
+            this.queue.push({ from, to, start, end });
+        }
+        cancelAnimationFrame(this.frameRequest);
+        this.frame = 0;
+        this.update();
+        return promise;
+    }
+    update() {
+        let output = '';
+        let complete = 0;
+        for (let i = 0, n = this.queue.length; i < n; i++) {
+            let { from, to, start, end, char } = this.queue[i];
+            if (this.frame >= end) {
+                complete++;
+                output += to;
+            } else if (this.frame >= start) {
+                if (!char || Math.random() < 0.28) {
+                    char = this.randomChar();
+                    this.queue[i].char = char;
+                }
+                output += `<span class="dud">${char}</span>`;
+            } else {
+                output += from;
+            }
+        }
+        this.el.innerHTML = output;
+        if (complete === this.queue.length) {
+            this.resolve();
+        } else {
+            this.frameRequest = requestAnimationFrame(this.update);
+            this.frame++;
+        }
+    }
+    randomChar() {
+        return this.chars[Math.floor(Math.random() * this.chars.length)];
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Убираем якорь из URL при загрузке, чтобы страница всегда открывалась наверху.
     if (window.history.replaceState) {
@@ -27,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initImageModal();
     initCountersAnimation();
     initCodeRain();
+    initTextScramble();
     initThemeToggle();
     initParticleCanvas();
 });
@@ -119,6 +174,47 @@ function initThemeToggle() {
             requestAnimationFrame(() => transitionOverlay.classList.remove('active'));
         }, 800); // Это время должно совпадать с transition в .theme-transition-overlay
     });
+}
+
+// Функция для анимации текста (глитч на десктопе, простой fade на мобильных)
+function initTextScramble() {
+    const skillsText = document.getElementById('skills-text');
+    if (!skillsText) return;
+
+    const skills = [
+        "Python", "C++", "Machine Learning", "Scikit-learn", "TensorFlow",
+        "PyTorch", "Pandas & NumPy", "Natural Language Processing", "SQL",
+        "PostgreSQL", "RESTful API", "Qt Framework", "Neo4j (Cypher)",
+    ];
+
+    // Оптимизация для мобильных: простой fade-эффект вместо глитча
+    if (window.innerWidth <= 768) {
+        let counter = 0;
+        skillsText.style.transition = 'opacity 0.4s ease-in-out';
+        
+        // Устанавливаем начальный текст
+        skillsText.textContent = skills[counter];
+
+        setInterval(() => {
+            skillsText.style.opacity = 0; // Fade out
+            setTimeout(() => {
+                counter = (counter + 1) % skills.length;
+                skillsText.textContent = skills[counter];
+                skillsText.style.opacity = 1; // Fade in
+            }, 400); // Должно совпадать с длительностью transition
+        }, 2500); // Меняем текст каждые 2.5 секунды
+    } else {
+        // Для десктопа используем глитч-эффект
+        const fx = new TextScramble(skillsText);
+        let counter = 0;
+        const next = () => {
+            fx.setText(skills[counter]).then(() => {
+                setTimeout(next, 2500); // Интервал между сменой текста
+            });
+            counter = (counter + 1) % skills.length;
+        };
+        next();
+    }
 }
 
 // Анимация появления элементов при прокрутке
@@ -364,6 +460,8 @@ function initCursor() {
 
 // Функция для создания фона с анимированными частицами
 function initParticleCanvas() {
+    // Отключаем на мобильных для производительности
+    if (window.innerWidth <= 768) return;
     const canvas = document.getElementById('particle-canvas');
     if (!canvas) return;
 
@@ -498,6 +596,8 @@ function initCountersAnimation() {
 
 // Функция для создания фоновой анимации "дождя из кода"
 function initCodeRain() {
+    // Отключаем на мобильных для производительности
+    if (window.innerWidth <= 768) return;
     const container = document.getElementById('code-rain-container');
     if (!container) return;
 
@@ -552,6 +652,8 @@ function initHeaderScroll() {
 
 // Анимация для фоновых элементов при скролле
 function initAnimatedShapes() {
+    // Отключаем на мобильных для производительности
+    if (window.innerWidth <= 768) return;
     const shapes = document.querySelectorAll('.animated-shape');
     if (!shapes.length) return;
     
