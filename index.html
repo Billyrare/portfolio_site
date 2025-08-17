@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -284,11 +284,11 @@
         <div class="animated-shape circle-shape shape-4"></div>
     </div>
 
-    <!-- Добавляем кнопку переключения темы -->
+    <!-- Добавляем кнопку переключения темы
     <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">
         <i class="fas fa-moon"></i>
         <i class="fas fa-sun"></i>
-    </button>
+    </button> -->
 
     <!-- Добавляем оверлей для анимации переключения -->
     <div class="theme-transition-overlay" id="transition-overlay"></div>
@@ -302,6 +302,7 @@
         <div class="nav-container">
             <div class="spacer"></div>
             <ul class="nav-links">
+                <button class="mobile-menu-close" aria-label="Закрыть меню">&times;</button>
                 <li><a href="#home" class="active">Главная</a></li>
                 <li><a href="#projects">Проекты</a></li>
                 <li><a href="#about">Обо мне</a></li>
@@ -309,7 +310,7 @@
                 <li><a href="#contact">Контакт</a></li>
             </ul>
             
-            <button class="mobile-menu-toggle" style="display: none;">
+            <button class="mobile-menu-toggle" aria-label="Открыть меню">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -353,12 +354,10 @@
             
             <div class="container">
                 <div class="hero-content">
-                    <h1 class="gradient-text glitch" title="Привет, я Ботир">Привет, я <span class="highlight">Ботир</span></h1>
-                    <p class="subtitle text-glitch">АВТОМАТИЗИРОВАННАЯ РАЗРАБОТКА</p>
-                    <div class="cta-buttons">
-                        <a href="#projects" class="btn primary-btn glitch-button digital-noise">Мои проекты</a>
-                        <a href="#contact" class="btn secondary-btn flicker-effect">Связаться</a>
-                    </div>
+                    <h1>Привет, я <span class="highlight">Ботир</span></h1>
+                    <p class="hero-intro">Инженер-программист с опытом работы в:</p>
+                    <p id="skills-text" class="subtitle text-glitch"></p>
+                    <a href="#contact" class="button">Связаться со мной</a>
                 </div>
             </div>
             
@@ -370,29 +369,7 @@
             <div class="container">
                 <h2 class="reveal">Избранные проекты</h2>
                 <div class="projects-grid">
-                    <div class="project-item reveal">
-                        <div class="project-info">
-                            <h3>Минималистичный веб-дизайн</h3>
-                            <p>Создание чистого и функционального интерфейса для компании, специализирующейся на экологически чистой продукции.</p>
-                            <a href="#" class="project-link">Подробнее</a>
-                        </div>
-                    </div>
-
-                    <div class="project-item reveal">
-                        <div class="project-info">
-                            <h3>Брендинг для кафе</h3>
-                            <p>Разработка айдентики и брендинга для небольшого уютного кафе с использованием натуральных текстур и мягкой цветовой гаммы.</p>
-                            <a href="#" class="project-link">Подробнее</a>
-                        </div>
-                    </div>
-
-                    <div class="project-item reveal">
-                        <div class="project-info">
-                            <h3>Мобильное приложение</h3>
-                            <p>Проектирование и дизайн пользовательского интерфейса мобильного приложения для планирования ежедневных задач.</p>
-                            <a href="#" class="project-link">Подробнее</a>
-                        </div>
-                    </div>
+                    <!-- Проекты будут загружены сюда динамически -->
                 </div>
             </div>
             <div class="accent-shape shape-line"></div>
@@ -404,21 +381,25 @@
                 <div class="about-content">
                     <div class="about-text reveal">
                         <h2>Обо мне</h2>
-                        <p>Я Ботир, дизайнер и разработчик с философией, основанной на минимализме, функциональности и внимании к деталям. Создаю проекты, в которых простота является ключевым компонентом эффективности.</p>
-                        <p>Мой подход сочетает в себе эстетику и практичность. Я верю, что каждый элемент дизайна должен нести определенное значение и способствовать улучшению пользовательского опыта.</p>
+                        <p>Я — инженер-программист с глубоким интересом к архитектуре данных и системам управления базами данных. Меня увлекает процесс проектирования, оптимизации и управления потоками информации, которые лежат в основе любого современного приложения. Я убежден, что надежная и грамотно спроектированная база данных — это фундамент для масштабируемых и эффективных программных решений.</p>
+                        <p>Мой практический опыт включает работу с различными типами баз данных: от реляционных (SQL, PostgreSQL) до графовых (Neo4j). Наряду с этим, я активно применяю навыки в машинном обучении для анализа данных, включая разработку рекуррентных сетей (LSTM) для прогнозирования и моделей компьютерного зрения для распознавания образов. Этот комплексный подход позволяет мне создавать полноценные интеллектуальные системы от уровня хранения данных до реализации сложной бизнес-логики.</p>
                         
                         <div class="stats">
                             <div class="stat-item reveal">
-                                <p>Опыт работы</p>
-                                <h3>5+ лет</h3>
+                                <p>Опыт</p>
+                                <h3 class="counter">3+ года</h3>
                             </div>
                             <div class="stat-item reveal">
-                                <p>Проекты</p>
-                                <h3>50+</h3>
+                                <p>Завершенные проекты</p>
+                                <h3 class="counter">15+</h3>
                             </div>
                             <div class="stat-item reveal">
-                                <p>Клиенты</p>
-                                <h3>30+</h3>
+                                <p>Ключевые технологии</p>
+                                <div class="tech-icons">
+                                    <i class="fas fa-database" title="SQL"></i>
+                                    <i class="fab fa-python" title="Python"></i>
+                                    <span class="cpp-icon" title="C++">C++</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -432,33 +413,33 @@
             <div class="container">
                 <div class="services-content">
                     <div class="services-intro reveal">
-                        <h2>Услуги</h2>
-                        <p>Я предлагаю широкий спектр услуг в области дизайна и разработки, основываясь на принципах минимализма и функциональности. Каждый проект начинается с понимания потребностей клиента и целей, которые он стремится достичь.</p>
+                        <h2>Компетенции</h2>
+                        <p>Я предлагаю экспертизу в ключевых областях машинного обучения и разработки программного обеспечения, направленную на создание интеллектуальных и масштабируемых решений.</p>
                     </div>
 
                     <div class="services-list">
                         <div class="service-item reveal">
                             <span class="service-number">01</span>
-                            <h3>Веб-дизайн</h3>
-                            <p>Создание современных, адаптивных и минималистичных веб-сайтов, ориентированных на пользовательский опыт и конверсию.</p>
+                            <h3>Разработка ML-моделей</h3>
+                            <p>Создание и внедрение кастомных моделей машинного обучения для решения задач классификации, регрессии и кластеризации.</p>
                         </div>
 
                         <div class="service-item reveal">
                             <span class="service-number">02</span>
-                            <h3>UI/UX Дизайн</h3>
-                            <p>Разработка интуитивно понятных и эстетически приятных пользовательских интерфейсов для веб и мобильных приложений.</p>
+                            <h3>Анализ данных и прогнозирование</h3>
+                            <p>Глубокий анализ данных для выявления скрытых закономерностей и построение моделей для прогнозирования временных рядов.</p>
                         </div>
 
                         <div class="service-item reveal">
                             <span class="service-number">03</span>
-                            <h3>Фирменный стиль</h3>
-                            <p>Создание уникальной айдентики, включая логотипы, визуальный язык и руководство по использованию бренда.</p>
+                            <h3>Компьютерное зрение</h3>
+                            <p>Разработка систем для обработки и анализа изображений, включая распознавание, сегментацию и сжатие данных.</p>
                         </div>
 
                         <div class="service-item reveal">
                             <span class="service-number">04</span>
-                            <h3>Веб-разработка</h3>
-                            <p>Техническая реализация дизайна в функциональные веб-сайты с использованием современных технологий и чистого кода.</p>
+                            <h3>Прототипирование AI-решений</h3>
+                            <p>Быстрая разработка и тестирование прототипов интеллектуальных систем для проверки гипотез и демонстрации концепций.</p>
                         </div>
                     </div>
                 </div>
@@ -489,10 +470,9 @@
                         </div>
                         
                         <div class="contact-socials">
-                            <a href="#"><i class="fab fa-github"></i></a>
-                            <a href="#"><i class="fab fa-behance"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://github.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                            <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
 
@@ -523,17 +503,100 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <p class="footer-text">&copy; 2023 Ботир. Все права защищены.</p>
-                <div class="footer-links">
-                    <a href="#">Политика конфиденциальности</a>
-                    <a href="#">Условия использования</a>
+                <p class="footer-text">&copy; 2024 Ботир. Все права защищены.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/botiroff" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script src="script.js"></script>
-    
+    <script>
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise(resolve => (this.resolve = resolve));
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="dud">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        const skills = [
+            "Python",
+            "C++",
+            "Machine Learning",
+            "Scikit-learn",
+            "TensorFlow",
+            "PyTorch",
+            "Pandas & NumPy",
+            "Natural Language Processing",
+            "SQL",
+            "PostgreSQL",
+            "RESTful API",
+            "Qt Framework",
+            "Neo4j (Cypher)",
+        ];
+        const skillsText = document.getElementById('skills-text');
+        const fx = new TextScramble(skillsText);
+
+        let counter = 0;
+        const next = () => {
+            fx.setText(skills[counter]).then(() => {
+                setTimeout(next, 2000); // Уменьшаем интервал для более частой смены
+            });
+            counter = (counter + 1) % skills.length;
+        };
+
+        next();
+    </script>
     <!-- Скрипт для обработки навигации при прокрутке -->
     <script>
         window.addEventListener('scroll', function() {
@@ -546,4 +609,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

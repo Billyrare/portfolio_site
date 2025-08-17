@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проект | Сеть Хэмминга для распознавания образов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="spacer"></div>
+            <ul class="nav-links">
+                <button class="mobile-menu-close" aria-label="Закрыть меню">&times;</button>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/#projects">Проекты</a></li>
+                <li><a href="/#about">Обо мне</a></li>
+                <li><a href="/#services">Услуги</a></li>
+                <li><a href="/#contact">Контакт</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="Открыть меню">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="project-detail-container">
+        <h1>Сеть Хэмминга для распознавания образов</h1>
+        
+        <p>
+            Этот проект представляет собой реализацию нейронной сети Хэмминга для распознавания и классификации бинарных образов. 
+            Сеть способна идентифицировать эталонный образец, наиболее близкий к входному (возможно, зашумленному) вектору, основываясь на расстоянии Хэмминга.
+            Реализация основана на теоретических материалах из книги В.А. Головко "Нейроинтеллект: Теория и применение".
+        </p>
+
+        <h2>Ключевые особенности</h2>
+        <ul class="tech-list">
+            <li><b>Двухслойная архитектура:</b> Первый слой вычисляет меру сходства, а второй (сеть Хопфилда) выполняет конкурентный процесс для выбора нейрона-победителя.</li>
+            <li><b>Расстояние Хэмминга:</b> В основе работы сети лежит вычисление расстояния Хэмминга для определения близости образов.</li>
+            <li><b>Устойчивость к шуму:</b> Сеть эффективно распознает образы даже при наличии искажений и шума.</li>
+        </ul>
+
+        <h2>Использованные технологии</h2>
+        <ul class="tech-list">
+            <li><b>Python:</b> Основной язык реализации.</li>
+            <li><b>NumPy:</b> Для всех матричных и векторных операций.</li>
+        </ul>
+
+        <h2>Реализация класса сети</h2>
+        <p>Основной класс `HammingNetwork`, инкапсулирующий логику инициализации весов и распознавания.</p>
+        <pre><code>import numpy as np
+
+class HammingNetwork:
+    def __init__(self, reference_patterns, epsilon=0.5):
+        """
+        Инициализация сети Хэмминга
+        
+        Переменные:
+        reference_patterns - матрица эталонных образцов X размера m x n
+        n_patterns (m) - количество эталонных образцов
+        n_inputs (n) - размерность входного вектора
+        W1 (w) - матрица весов первого слоя
+        T - вектор пороговых значений
+        W2 (v) - матрица весов второго слоя
+        epsilon (ε) - параметр торможения
+        """
+        self.reference_patterns = np.array(reference_patterns)
+        self.n_patterns = len(reference_patterns)  # m
+        self.n_inputs = len(reference_patterns[0])  # n
+        
+        self.W1 = self.reference_patterns / 2
+        self.T = np.ones(self.n_patterns) * self.n_inputs / 2
+        
+        self.epsilon = epsilon
+        self.W2 = np.eye(self.n_patterns) - epsilon * (1 - np.eye(self.n_patterns))
+    
+    def activation_function(self, x):
+        """
+        Пороговая функция активации (формула 5.91)
+        F(Sj) = Sj, если Sj &gt; 0
+        F(Sj) = 0, если Sj ≤ 0
+        """
+        return np.where(x &gt; 0, x, 0)
+    
+    def forward_first_layer(self, input_pattern):
+        """
+        Прямое распространение через первый слой (формула 5.86)
+        yj = Σ(wij*xi) + Tj = Σ(xij/2 * xi) + n/2
+        """
+        return np.dot(self.W1, input_pattern) + self.T
+    
+    def forward_second_layer(self, y, max_iterations=100):
+        """
+        Итеративный процесс во втором слое (формула 5.92)
+        zj(t) = F(zj(t-1) - ε*Σ(zk(t-1)))
+        """
+        z = y.copy()
+        
+        for _ in range(max_iterations):
+            z_old = z.copy()
+            for j in range(self.n_patterns):
+                inhibitory_sum = np.sum(z_old) - z_old[j]
+                z[j] = self.activation_function(z_old[j] - self.epsilon * inhibitory_sum)
+            
+            if np.array_equal(z, z_old):
+                break
+        
+        return z
+    
+    def recognize(self, input_pattern):
+        """
+        Распознавание входного образца
+        """
+        y = self.forward_first_layer(input_pattern)
+        z = self.forward_second_layer(y)
+        winner_idx = np.argmax(z)
+        similarity = y[winner_idx]
+        return self.reference_patterns[winner_idx], winner_idx, similarity</code></pre>
+
+        <h2>Пример использования и результаты</h2>
+        <p>Скрипт для тестирования сети на эталонных и зашумленных образах цифр.</p>
+        <pre><code># from hamming_network import HammingNetwork # Предполагается, что класс выше в файле hamming_network.py
+
+def print_pattern(pattern, width=5):
+    # ...
+
+def add_noise(pattern, noise_level=0.1):
+    # ...
+
+# Создаем эталонные образы (цифры 0, 1, 2)
+reference_patterns = [
+    # Цифра 0
+    [0,1,1,1,0, 1,0,0,0,1, 1,0,0,0,1, 1,0,0,0,1, 0,1,1,1,0],
+    # Цифра 1
+    [0,0,1,0,0, 0,1,1,0,0, 0,0,1,0,0, 0,0,1,0,0, 0,1,1,1,0],
+    # Цифра 2
+    [0,1,1,1,0, 1,0,0,0,1, 0,0,1,1,0, 0,1,0,0,0, 1,1,1,1,1]
+]
+
+# Создаем и тестируем сеть...
+
+# Пример вывода в консоль:
+# Тестирование образца 0:
+# Исходный образец:
+# . # # # .
+# # . . . #
+# # . . . #
+# # . . . #
+# . # # # .
+#
+# Зашумленный образец:
+# . # # # .
+# # . . . #
+# # . # . #
+# # . . . #
+# . # # # .
+#
+# Распознанный образец:
+# . # # # .
+# # . . . #
+# # . . . #
+# # . . . #
+# . # # # .
+#
+# Мера сходства: 24.00
+# ----------------------------------------
+</code></pre>
+
+        <a href="/" class="back-link">&larr; Вернуться на главную</a>
+    </div>
+
+    <!-- Модальное окно для изображений -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-button">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Modal Image">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2024 Ботир. Все права защищены.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/botiroff" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

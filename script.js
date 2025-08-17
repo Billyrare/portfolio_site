@@ -1,5 +1,15 @@
 // Инициализация при загрузке страницы
+let csrfToken = '';
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Получаем CSRF-токен при загрузке страницы
+    fetch('/get-csrf-token')
+        .then(res => res.json())
+        .then(data => {
+            csrfToken = data.csrf_token;
+        })
+        .catch(error => console.error('Не удалось получить CSRF-токен:', error));
+
     // Инициализация всех функций
     initRevealOnScroll();
     initSmoothScroll();
@@ -7,8 +17,52 @@ document.addEventListener('DOMContentLoaded', function() {
     initCursor();
     initHeaderScroll();
     initAnimatedShapes();
-    initThemeToggle();
+    loadProjects();
+    initMobileMenu();
+    initImageModal();
+    initCountersAnimation();
 });
+
+// Функция для загрузки и отображения проектов
+function loadProjects() {
+    fetch('/api/projects')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(projects => {
+            const projectsGrid = document.querySelector('.projects-grid');
+            if (!projectsGrid) return;
+
+            projectsGrid.innerHTML = ''; // Очищаем контейнер перед добавлением новых проектов
+
+            projects.forEach(project => {
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item reveal';
+
+                projectItem.innerHTML = `
+                    <div class="project-info">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <a href="${project.link}" class="project-link">Подробнее</a>
+                    </div>
+                `;
+                projectsGrid.appendChild(projectItem);
+            });
+
+            // Повторно инициализируем анимацию появления для новых элементов
+            initRevealOnScroll();
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке проектов:', error);
+            const projectsGrid = document.querySelector('.projects-grid');
+            if (projectsGrid) {
+                projectsGrid.innerHTML = '<p>Не удалось загрузить проекты. Пожалуйста, попробуйте позже.</p>';
+            }
+        });
+}
 
 // Функция переключения темы
 function initThemeToggle() {
@@ -133,50 +187,71 @@ function initSmoothScroll() {
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
+            const href = this.getAttribute('href');
             
-            // Получаем целевую секцию
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                // Плавная прокрутка
-                window.scrollTo({
-                    top: targetSection.offsetTop,
-                    behavior: 'smooth'
-                });
-                
-                // Активное состояние ссылки
-                navLinks.forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
+            // Плавная прокрутка для якорей на текущей странице
+            if (href.startsWith('#')) {
+                e.preventDefault(); // Предотвращаем стандартное поведение только для якорей
+                const targetSection = document.querySelector(href);
+
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Активное состояние ссылки
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
             }
+            // Для ссылок, ведущих на другие страницы (например, /#projects),
+            // e.preventDefault() не вызывается, и браузер выполняет стандартный переход.
         });
     });
     
     // Обновление активного пункта меню при скролле
-    window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY;
-        
-        // Находим текущую видимую секцию
-        document.querySelectorAll('section').forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
+    // Этот код должен выполняться только на главной странице, где есть секции
+    const sections = document.querySelectorAll('section[id]');
+    if (sections.length > 0) {
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
             
-            if (scrollPosition >= sectionTop - 200 && 
-                scrollPosition < sectionTop + sectionHeight - 200) {
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
                 
-                const currentId = section.getAttribute('id');
-                
-                // Обновляем активную ссылку
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${currentId}`) {
-                        link.classList.add('active');
-                    }
-                });
-            }
+                if (scrollPosition >= sectionTop - 200 && 
+                    scrollPosition < sectionTop + sectionHeight - 200) {
+                    
+                    const currentId = section.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${currentId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
         });
-    });
+    }
+
+    // Плавная прокрутка при загрузке страницы с якорем
+    // (например, при переходе с другой страницы на /#projects)
+    if (window.location.hash) {
+        const targetId = window.location.hash;
+        // Убедимся, что это не просто пустой хэш
+        if (targetId.length > 1) {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // Небольшая задержка, чтобы страница успела отрисоваться
+                // и учесть высоту фиксированного хедера.
+                setTimeout(() => {
+                    window.scrollTo({ top: targetElement.offsetTop, behavior: 'smooth' });
+                }, 150);
+            }
+        }
+    }
 }
 
 // Обработка формы контактов
@@ -187,29 +262,47 @@ function initContactForm() {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Добавляем состояние загрузки
             const submitButton = this.querySelector('button[type="submit"]');
             const originalText = submitButton.textContent;
             submitButton.textContent = 'Отправка...';
             submitButton.disabled = true;
-            
-            // Имитация отправки (можно заменить на реальный API запрос)
-            setTimeout(() => {
-                // Успешная отправка
-                submitButton.textContent = 'Отправлено!';
-                
-                // Показываем уведомление
-                showNotification('Сообщение успешно отправлено!');
-                
-                // Сбрасываем форму
-                form.reset();
-                
-                // Восстанавливаем кнопку через некоторое время
-                setTimeout(() => {
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value,
+            };
+
+            fetch('/submit_contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    submitButton.textContent = 'Отправлено!';
+                    showNotification(data.message || 'Сообщение успешно отправлено!', 'success');
+                    form.reset();
+                } else {
+                    submitButton.textContent = originalText;
+                    showNotification(data.error || 'Произошла ошибка.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                submitButton.textContent = originalText;
+                showNotification('Ошибка сети. Попробуйте еще раз.', 'error');
+            })
+            .finally(() => {
+                 setTimeout(() => {
                     submitButton.textContent = originalText;
                     submitButton.disabled = false;
                 }, 3000);
-            }, 1500);
+            });
         });
     }
 }
@@ -307,6 +400,58 @@ function initCursor() {
     });
 }
 
+// Функция для анимации счетчиков при появлении на экране
+function initCountersAnimation() {
+    const counters = document.querySelectorAll('.counter');
+    if (counters.length === 0) return;
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                
+                const originalText = counter.textContent;
+                const targetMatch = originalText.match(/(\d+)/);
+
+                // Если в тексте нет числа, не анимируем
+                if (!targetMatch) {
+                    observer.unobserve(counter);
+                    return;
+                }
+
+                const target = parseInt(targetMatch[0], 10);
+                const prefix = originalText.substring(0, targetMatch.index);
+                const suffix = originalText.substring(targetMatch.index + targetMatch[0].length);
+                
+                const duration = 2000; // Длительность анимации в мс
+                let startTime = null;
+
+                const animate = (timestamp) => {
+                    if (!startTime) startTime = timestamp;
+                    const progress = timestamp - startTime;
+                    const percentage = Math.min(progress / duration, 1);
+                    
+                    const currentValue = Math.floor(target * percentage);
+                    counter.textContent = prefix + currentValue + suffix;
+
+                    if (progress < duration) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        counter.textContent = originalText; // Устанавливаем точное конечное значение
+                    }
+                };
+
+                requestAnimationFrame(animate);
+                observer.unobserve(counter); // Анимируем только один раз
+            }
+        });
+    }, { threshold: 0.5 }); // Начинаем анимацию, когда 50% элемента видно
+
+    counters.forEach(counter => {
+        observer.observe(counter);
+    });
+}
+
 // Функция для управления состоянием хедера при прокрутке
 function initHeaderScroll() {
     const header = document.querySelector('.header');
@@ -371,4 +516,67 @@ function initAnimatedShapes() {
     
     // Инициализация при загрузке
     parallaxShapes();
-} 
+}
+
+// Функция для модального окна с изображениями на страницах проектов
+function initImageModal() {
+    const modal = document.getElementById("imageModal");
+    if (!modal) return; // Выполнять только если модальное окно есть на странице
+
+    const modalImg = document.getElementById("modalImage");
+    const galleryImages = document.querySelectorAll(".screenshot-gallery img, .exoplanet-gallery img");
+    const closeButton = modal.querySelector(".close-button");
+
+    galleryImages.forEach(img => {
+        img.onclick = function(){
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            modalImg.alt = this.alt;
+        }
+    });
+
+    if (closeButton) {
+        closeButton.onclick = function() {
+            modal.style.display = "none";
+        }
+    }
+
+    // Закрытие модального окна по клику вне изображения
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+}
+
+// Функция для мобильного меню
+function initMobileMenu() {
+    const toggleButton = document.querySelector('.mobile-menu-toggle');
+    const closeButton = document.querySelector('.mobile-menu-close');
+    const navLinks = document.querySelector('.nav-links');
+    const links = navLinks.querySelectorAll('a');
+
+    if (toggleButton && navLinks) {
+        toggleButton.addEventListener('click', () => {
+            navLinks.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Запрещаем прокрутку фона
+        });
+    }
+
+    if (closeButton && navLinks) {
+        closeButton.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            document.body.style.overflow = ''; // Восстанавливаем прокрутку
+        });
+    }
+
+    // Закрываем меню при клике на ссылку
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    });
+}

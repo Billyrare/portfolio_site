@@ -3,4 +3,5 @@ gunicorn==21.2.0
 Werkzeug==2.3.7
 flask-wtf==1.2.1
 python-dotenv==1.0.0
-bleach==6.0.0 
+bleach==6.0.0
+requests==2.31.0

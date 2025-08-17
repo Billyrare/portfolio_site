@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проект | Рекуррентная сеть для прогнозирования</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="spacer"></div>
+            <ul class="nav-links">
+                <button class="mobile-menu-close" aria-label="Закрыть меню">&times;</button>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/#projects">Проекты</a></li>
+                <li><a href="/#about">Обо мне</a></li>
+                <li><a href="/#services">Услуги</a></li>
+                <li><a href="/#contact">Контакт</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="Открыть меню">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="project-detail-container">
+        <h1>Рекуррентная сеть (LSTM) для прогнозирования</h1>
+        
+        <p>
+            Этот проект представляет собой реализацию рекуррентной нейронной сети с ячейками долгой кратковременной памяти (LSTM) для решения задачи прогнозирования временных рядов. 
+            Модель обучается на последовательностях данных (например, арифметических или геометрических прогрессиях) и предсказывает следующее значение в ряду.
+            Реализация основана на теоретических материалах из книги Р. Каллана "Основные концепции нейронных сетей".
+        </p>
+
+        <h2>Ключевые особенности</h2>
+        <ul class="tech-list">
+            <li><b>LSTM-ячейка:</b> Реализована кастомная ячейка долгой кратковременной памяти, которая позволяет сети эффективно работать с долгосрочными зависимостями в данных.</li>
+            <li><b>Функция активации `arcsinh`:</b> В качестве функции активации на скрытом слое используется логарифмическая функция (гиперболический арксинус), что является отличительной чертой данной реализации.</li>
+            <li><b>Адаптивное обучение:</b> Внедрен механизм адаптивного изменения коэффициента обучения и "терпения" (patience) для ранней остановки, что помогает избежать переобучения и улучшить сходимость.</li>
+            <li><b>Нормализация данных:</b> Входные данные нормализуются перед подачей в сеть для повышения стабильности процесса обучения.</li>
+        </ul>
+
+        <h2>Использованные технологии</h2>
+        <ul class="tech-list">
+            <li><b>Python:</b> Основной язык реализации.</li>
+            <li><b>NumPy:</b> Для всех матричных и векторных операций.</li>
+        </ul>
+
+        <h2>Реализация классов LSTM и рекуррентной сети</h2>
+        <p>Ниже представлены основные классы, реализующие логику LSTM-ячейки и самой рекуррентной сети.</p>
+        <pre><code>import numpy as np
+
+class LSTMCell:
+    def __init__(self, input_size, hidden_size):
+        # ... инициализация весов ...
+        self.Wi = np.random.randn(hidden_size, input_size) * 0.01
+        self.Ui = np.random.randn(hidden_size, hidden_size) * 0.01
+        self.bi = np.zeros((hidden_size, 1))
+        # ... и так далее для Wf, Wc, Wo
+
+    def arcsinh(self, x):
+        return np.log(x + np.sqrt(x**2 + 1))
+
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def forward(self, x, prev_h, prev_c):
+        i = self.sigmoid(np.dot(self.Wi, x) + np.dot(self.Ui, prev_h) + self.bi)
+        f = self.sigmoid(np.dot(self.Wf, x) + np.dot(self.Uf, prev_h) + self.bf)
+        o = self.sigmoid(np.dot(self.Wo, x) + np.dot(self.Uo, prev_h) + self.bo)
+        c_tilde = self.arcsinh(np.dot(self.Wc, x) + np.dot(self.Uc, prev_h) + self.bc)
+        c = f * prev_c + i * c_tilde
+        h = o * self.arcsinh(c)
+        return h, c
+
+class RecurrentNetwork:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.001):
+        self.lstm = LSTMCell(input_size, hidden_size)
+        self.Wy = np.random.randn(output_size, hidden_size) * 0.01
+        self.by = np.zeros((output_size, 1))
+        self.learning_rate = learning_rate
+        # ... и другие параметры
+
+    def forward(self, X, h0=None, c0=None):
+        # ... логика прямого прохода ...
+        sequence_length = len(X)
+        h = np.zeros((self.hidden_size, 1)) if h0 is None else h0
+        c = np.zeros((self.hidden_size, 1)) if c0 is None else c0
+        outputs = []
+        for t in range(sequence_length):
+            x = X[t].reshape(-1, 1)
+            h, c = self.lstm.forward(x, h, c)
+            y = np.dot(self.Wy, h) + self.by
+            outputs.append(y)
+        return np.array(outputs), None # Скрытые состояния не возвращаются для упрощения
+
+    def train(self, X, y_true, max_iterations=1000, error_threshold=0.01):
+        # ... логика обучения с нормализацией, ранней остановкой и адаптивным learning rate ...
+        # (код обучения опущен для краткости)
+        pass
+</code></pre>
+
+        <h2>Пример использования и результаты</h2>
+        <p>Скрипт для тестирования сети на различных временных последовательностях и вывода результатов в консоль и файл.</p>
+        <pre><code>def main():
+    # Параметры сети
+    input_size = 3
+    hidden_size = 3
+    output_size = 1
+    learning_rate = 0.001
+    error_threshold = 0.01
+    
+    # Тестовые наборы данных
+    test_sets = {
+        "Арифметическая прогрессия": {
+            "data": np.array([[1, 2, 3], [2, 3, 4], [3, 4, 5], ...]),
+            "expected": 10
+        },
+        "Геометрическая прогрессия": {
+            "data": np.array([[1, 2, 4], [2, 4, 8], [4, 8, 16], ...]),
+            "expected": 128
+        }
+    }
+    
+    # Обучаем и тестируем сеть на каждом наборе
+    for test_name, test_set in test_sets.items():
+        rnn = RecurrentNetwork(input_size, hidden_size, output_size, learning_rate)
+        
+        # ... вывод логов ...
+        
+        iterations, final_error, predicted = rnn.train(
+            test_set["data"], 
+            test_set["expected"]
+        )
+        
+        # ... вывод результатов ...
+
+# Пример вывода в файл results.txt:
+# ==================================================
+# Тест: Арифметическая прогрессия
+# Входные данные:
+# Последовательность: [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+# Скрытый слой: 3 нейрона
+# Ожидаемая ошибка: 0.01
+# Коэффициент обучения: 0.001
+#
+# Матрица обучения:
+# 1.0 2.0 3.0
+# 2.0 3.0 4.0
+# ...
+#
+# Результат:
+# Ошибка = 0.00987
+# Итераций = 5843
+# Ожидаемый результат = 10
+# Результат = 9.99012834
+# ==================================================
+</code></pre>
+
+        <a href="/" class="back-link">&larr; Вернуться на главную</a>
+    </div>
+
+    <!-- Модальное окно для изображений -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-button">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Modal Image">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2024 Ботир. Все права защищены.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/botiroff" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
