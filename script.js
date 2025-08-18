@@ -1,3 +1,239 @@
+// Система анимированных частиц с хаотичным движением
+let particlesCanvas, particlesCtx;
+let particles = [];
+let animationId;
+let isDarkTheme = false;
+
+// Класс частицы с хаотичным движением
+class Particle {
+    constructor(x, y, isDark) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 1.2; // Скорость по X (быстрее для хаоса)
+        this.vy = (Math.random() - 0.5) * 1.2; // Скорость по Y (быстрее для хаоса)
+        this.radius = Math.random() * 3 + 2; // Размер частицы (больше: 2-5px)
+        this.life = 1.0; // Жизненный цикл
+        this.decay = Math.random() * 0.001 + 0.0005; // Скорость затухания
+        this.isDark = isDark;
+        
+        // Цвета в зависимости от темы
+        this.colors = isDark ? 
+            ['#6b7280', '#9ca3af', '#d1d5db', '#e5e7eb'] : // Тёмная тема (добавлен светлый)
+            ['#8b5a2b', '#a0522d', '#cd853f', '#d2691e']; // Светлая тема (коричневые тона)
+        this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
+    }
+    
+    // Обновление физики частицы
+    update(width, height) {
+        // Лёгкая гравитация
+        this.vy += 0.0003;
+        
+        // Обновление позиции
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // Затухание скорости (сопротивление воздуха)
+        this.vx *= 0.999;
+        this.vy *= 0.999;
+        
+        // Отскок от границ с изменением направления
+        if (this.x <= this.radius || this.x >= width - this.radius) {
+            this.vx *= -0.8;
+            this.x = Math.max(this.radius, Math.min(width - this.radius, this.x));
+            // Добавляем случайность при отскоке
+            this.vy += (Math.random() - 0.5) * 0.5;
+        }
+        if (this.y <= this.radius || this.y >= height - this.radius) {
+            this.vy *= -0.8;
+            this.y = Math.max(this.radius, Math.min(height - this.radius, this.y));
+            // Добавляем случайность при отскоке
+            this.vx += (Math.random() - 0.5) * 0.5;
+        }
+        
+        // Периодически добавляем случайное движение для хаоса
+        if (Math.random() < 0.01) { // 1% шанс каждый кадр
+            this.vx += (Math.random() - 0.5) * 0.3;
+            this.vy += (Math.random() - 0.5) * 0.3;
+        }
+        
+        // Уменьшение жизненного цикла
+        this.life -= this.decay;
+        
+        // Если частица "умерла", создаём новую
+        if (this.life <= 0) {
+            this.respawn(width, height);
+        }
+    }
+    
+    // Возрождение частицы
+    respawn(width, height) {
+        // Случайная позиция на краях экрана для более естественного появления
+        const side = Math.floor(Math.random() * 4); // 0: верх, 1: право, 2: низ, 3: лево
+        
+        switch (side) {
+            case 0: // Верх
+                this.x = Math.random() * width;
+                this.y = -this.radius;
+                this.vx = (Math.random() - 0.5) * 1.2;
+                this.vy = Math.random() * 1.2; // Движение вниз
+                break;
+            case 1: // Право
+                this.x = width + this.radius;
+                this.y = Math.random() * height;
+                this.vx = -Math.random() * 1.2; // Движение влево
+                this.vy = (Math.random() - 0.5) * 1.2;
+                break;
+            case 2: // Низ
+                this.x = Math.random() * width;
+                this.y = height + this.radius;
+                this.vx = (Math.random() - 0.5) * 1.2;
+                this.vy = -Math.random() * 1.2; // Движение вверх
+                break;
+            case 3: // Лево
+                this.x = -this.radius;
+                this.y = Math.random() * height;
+                this.vx = Math.random() * 1.2; // Движение вправо
+                this.vy = (Math.random() - 0.5) * 1.2;
+                break;
+        }
+        
+        this.life = 1.0;
+        this.radius = Math.random() * 3 + 2; // Больше размер при возрождении
+        this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
+    }
+    
+    // Отрисовка частицы
+    draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        
+        // Добавляем свечение для большей заметности
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 3;
+        
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Добавляем внутренний круг для объёма
+        ctx.fillStyle = this.isDark ? '#ffffff' : '#ffffff';
+        ctx.globalAlpha = this.life * 0.3;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.restore();
+    }
+}
+
+// Инициализация canvas с частицами
+function initParticlesCanvas() {
+    particlesCanvas = document.getElementById('particles-canvas');
+    if (!particlesCanvas) return;
+    
+    particlesCtx = particlesCanvas.getContext('2d');
+    
+    // Определяем текущую тему
+    isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+    
+    // Настройка canvas
+    function resizeCanvas() {
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Создаём больше частиц
+    const particleCount = Math.min(65, Math.floor((window.innerWidth * window.innerHeight) / 15000));
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight,
+            isDarkTheme
+        ));
+    }
+    
+    // Запускаем анимацию
+    animateParticles();
+}
+
+// Анимация частиц
+function animateParticles() {
+    particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+    
+    // Обновляем и рисуем все частицы
+    particles.forEach(particle => {
+        particle.update(particlesCanvas.width, particlesCanvas.height);
+        particle.draw(particlesCtx);
+    });
+    
+    // Рисуем случайные соединения между близкими частицами
+    drawRandomConnections();
+    
+    animationId = requestAnimationFrame(animateParticles);
+}
+
+// Рисование случайных соединений между частицами
+function drawRandomConnections() {
+    const maxDistance = 80; // Увеличиваем расстояние для большего количества соединений
+    
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < maxDistance) {
+                // Увеличиваем прозрачность для лучшей видимости
+                const opacity = (1 - distance / maxDistance) * 0.4;
+                
+                // Разные цвета для соединений в зависимости от темы
+                const connectionColor = isDarkTheme ? '#9ca3af' : '#8b5a2b';
+                
+                particlesCtx.strokeStyle = connectionColor;
+                particlesCtx.globalAlpha = opacity;
+                particlesCtx.lineWidth = 0.8; // Толще линии
+                particlesCtx.lineCap = 'round'; // Скруглённые концы
+                
+                // Добавляем свечение для соединений
+                particlesCtx.shadowColor = connectionColor;
+                particlesCtx.shadowBlur = 2;
+                
+                particlesCtx.beginPath();
+                particlesCtx.moveTo(particles[i].x, particles[i].y);
+                particlesCtx.lineTo(particles[j].x, particles[j].y);
+                particlesCtx.stroke();
+            }
+        }
+    }
+    particlesCtx.globalAlpha = 1;
+    particlesCtx.shadowBlur = 0;
+}
+
+// Обновление темы для частиц
+function updateParticlesTheme(isDark) {
+    isDarkTheme = isDark;
+    
+    // Обновляем цвета всех частиц
+    particles.forEach(particle => {
+        particle.isDark = isDark;
+        particle.colors = isDark ? 
+            ['#6b7280', '#9ca3af', '#d1d5db', '#e5e7eb'] : // Тёмная тема
+            ['#8b5a2b', '#a0522d', '#cd853f', '#d2691e']; // Светлая тема (коричневые тона)
+        particle.color = particle.colors[Math.floor(Math.random() * particle.colors.length)];
+    });
+}
+
+// Очистка анимации
+function cleanupParticles() {
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+    }
+}
+
 // Инициализация при загрузке страницы
 let csrfToken = '';
 
@@ -69,6 +305,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Не удалось получить CSRF-токен:', error));
 
+    // Инициализируем canvas с частицами
+    initParticlesCanvas();
+    
     // Инициализация всех функций
     initRevealOnScroll();
     initSmoothScroll();
@@ -85,6 +324,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initThemeToggle();
     initParticleCanvas();
     initResumeDownload();
+});
+
+// Обновляем тему частиц при смене темы
+document.addEventListener('themeChanged', function(e) {
+    updateParticlesTheme(e.detail.isDark);
 });
 
 // Функция для скачивания резюме
@@ -218,6 +462,10 @@ function initThemeToggle() {
             htmlElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateIcon(newTheme);
+            
+            // Отправляем событие для обновления Vanta.js темы
+            const isDark = newTheme === 'dark';
+            document.dispatchEvent(new CustomEvent('themeChanged', { detail: { isDark } }));
             
             // 4. С помощью requestAnimationFrame убираем оверлей, чтобы он плавно исчез
             requestAnimationFrame(() => transitionOverlay.classList.remove('active'));
