@@ -442,8 +442,8 @@ function loadProjects() {
                     <div class="project-info">
                         <h3>${project.title}</h3>
                         <p>${project.description}</p>
-                        <a href="${project.link}" class="project-link">Подробнее</a>
                     </div>
+                    <a href="${project.link}" class="project-link">Подробнее</a>
                 `;
                 projectsGrid.appendChild(projectItem);
             });

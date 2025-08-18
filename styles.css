@@ -287,6 +287,7 @@ a {
 
 .project-info {
     padding-top: 0;
+    flex-grow: 1; /* Позволяет блоку с информацией расти, отодвигая кнопку вниз */
 }
 
 .project-info h3 {
@@ -2178,21 +2179,39 @@ html, body {
 }
 
 /* --- Компактные и современные карточки для проектов и компетенций --- */
-.projects-grid, .services-list {
-  display: flex !important;
-  flex-wrap: wrap;
+.services-list, .projects-grid {
+  display: grid !important;
   justify-content: center;
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: 2.5rem;
+  margin-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.services-list {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Адаптивные колонки: 2 на десктопе, 1 на мобильных */
+  grid-auto-rows: 1fr; /* Делает все карточки одинаковой высоты */
+  max-width: 850px;
+}
+
+.projects-grid {
+  grid-template-columns: repeat(4, 1fr); /* 4 колонки в ряд на десктопе */
+  max-width: 1400px; /* Увеличиваем макс. ширину для 4 карточек */
+  grid-auto-rows: 1fr; /* Делает карточки одинаковой высоты в многострочном режиме (на мобильных) */
+}
+
+@media (max-width: 992px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2x2 на планшетах и мобильных */
+  }
 }
 
 .project-item, .service-item {
   background: var(--glass-bg);
-  border-radius: 14px;
+  border-radius: 16px; /* Немного увеличиваем скругление */
   box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-  padding: 1.2rem 1.5rem;
-  min-width: 240px;
-  max-width: 320px;
+  padding: 2rem; /* Увеличиваем внутренние отступы */
+  /* min-width и max-width больше не нужны, размер контролирует grid */
   width: 100%;
   margin: 0;
   display: flex;
@@ -2200,6 +2219,7 @@ html, body {
   align-items: flex-start;
   transition: box-shadow 0.3s, transform 0.3s;
   font-size: 1rem;
+  text-align: left;
 }
 
 .project-item:hover, .service-item:hover {
@@ -2218,7 +2238,7 @@ html, body {
 
 .project-info p, .service-item p {
   font-size: 0.98rem;
-  color: var(--text-secondary);
+  color: var(--light-text);
   margin-bottom: 0.7rem;
   line-height: 1.5;
 }
@@ -2229,7 +2249,7 @@ html, body {
   border-radius: 6px;
   background: var(--accent-color);
   color: var(--primary-bg);
-  margin-top: 0.5rem;
+  margin-top: 1.5rem; /* Увеличиваем отступ, чтобы кнопка не прилипала к тексту */
   text-align: center;
   align-self: flex-end;
   transition: background 0.2s, color 0.2s;
@@ -2291,8 +2311,18 @@ html, body {
 
 /* --- Мобильная адаптация для кнопки скачивания резюме --- */
 @media (max-width: 768px) {
+    .theme-toggle {
+        bottom: 1.5rem; /* Нижняя кнопка */
+        right: 1.5rem;
+        left: auto; /* Убираем привязку к левому краю */
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
     .resume-download {
-        bottom: 1.5rem;
+        bottom: 6rem; /* Верхняя кнопка (1.5rem отступ + 3.5rem высота нижней + 1rem зазор) */
         right: 1.5rem;
         width: 3.5rem;
         height: 3.5rem;
