@@ -1310,7 +1310,7 @@ body:hover .cursor-dot {
 
 /* Добавление стилей для секций */
 section {
-    padding: 6rem 0;
+    padding: 13rem 0;
     position: relative;
     min-height: 60vh;
     display: flex;
@@ -2408,13 +2408,13 @@ html, body {
   font-size: 1.15rem;
   margin-bottom: 0.7rem;
   font-weight: 600;
-  color: var(--accent-color);
+  color: var(--text-color);
   text-align: left;
 }
 
 .project-info p, .service-item p {
   font-size: 0.98rem;
-  color: var(--text-color);
+  color: var(--text-secondary);
   margin-bottom: 0.7rem;
   line-height: 1.5;
 }
@@ -2430,37 +2430,115 @@ html, body {
   align-self: flex-end;
   transition: background 0.2s, color 0.2s;
 }
+
 .project-link:hover {
   background: var(--text-color);
   color: var(--accent-color);
 }
 
-/* Компактность для секций */
-.projects, .services {
-  margin-top: 6rem !important;
-  padding-bottom: 2rem;
+/* --- Кнопка скачивания резюме рядом с переключателем темы --- */
+.resume-download {
+    position: fixed;
+    bottom: 2rem;
+    right: 6rem;
+    width: 3rem;
+    height: 3rem;
+    background: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--glow-color);
+    z-index: 1001;
+    border: none;
+    color: var(--primary-bg);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Заголовки секций по центру и компактнее */
-.projects h2, .services h2 {
-  text-align: center;
-  font-size: 1.5rem !important;
-  margin-bottom: 1.5rem;
-  width: 100%;
+.resume-download:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--glow-color);
 }
 
-/* Для мобильных — ещё компактнее */
-@media (max-width: 600px) {
-  .projects-grid, .services-list {
-    gap: 1rem;
-  }
-  .project-item, .service-item {
-    min-width: 90vw;
-    max-width: 98vw;
-    padding: 1rem 0.7rem;
-    font-size: 0.95rem;
-  }
-  .projects h2, .services h2 {
-    font-size: 1.1rem !important;
-  }
+.resume-tooltip {
+    position: absolute;
+    right: 4rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    color: var(--text-color);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.resume-download:hover .resume-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* --- Мобильная адаптация для кнопки скачивания резюме --- */
+@media (max-width: 768px) {
+    .resume-download {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .resume-tooltip {
+        display: none; /* Скрываем tooltip на мобильных */
+    }
+    
+    /* Добавляем текст рядом с иконкой на мобильных */
+    .resume-download::after {
+        content: 'Резюме';
+        position: absolute;
+        left: -4rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        color: var(--text-color);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .resume-download:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .resume-download {
+        bottom: 1rem;
+        right: 1rem;
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.6rem;
+    }
+    
+    .resume-download::after {
+        left: -4.5rem;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.7rem;
+    }
 }

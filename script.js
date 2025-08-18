@@ -84,7 +84,56 @@ document.addEventListener('DOMContentLoaded', function() {
     initTextScramble();
     initThemeToggle();
     initParticleCanvas();
+    initResumeDownload();
 });
+
+// Функция для скачивания резюме
+function initResumeDownload() {
+    const resumeButton = document.getElementById('resume-download');
+    if (!resumeButton) {
+        console.error('Кнопка скачивания резюме не найдена!');
+        return;
+    }
+    
+    console.log('Кнопка скачивания резюме инициализирована');
+    
+    resumeButton.addEventListener('click', function() {
+        console.log('Попытка скачать резюме...');
+        
+        try {
+            // Способ 1: Создание ссылки для скачивания
+            const link = document.createElement('a');
+            link.href = 'resume.pdf';
+            link.download = 'Resume_IsamiddinovBB.pdf';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            console.log('Резюме отправлено на скачивание');
+            
+            // Способ 2: Альтернативный способ через window.open
+            setTimeout(() => {
+                try {
+                    window.open('resume.pdf', '_blank');
+                } catch (e) {
+                    console.error('Альтернативный способ скачивания не сработал:', e);
+                }
+            }, 100);
+            
+        } catch (error) {
+            console.error('Ошибка при скачивании резюме:', error);
+            
+            // Способ 3: Прямое открытие в новой вкладке
+            try {
+                window.open('resume.pdf', '_blank');
+            } catch (e) {
+                console.error('Все способы скачивания не сработали:', e);
+                alert('Не удалось скачать резюме. Попробуйте открыть файл в новой вкладке.');
+            }
+        }
+    });
+}
 
 // Функция для загрузки и отображения проектов
 function loadProjects() {
@@ -209,7 +258,7 @@ function initTextScramble() {
         let counter = 0;
         const next = () => {
             fx.setText(skills[counter]).then(() => {
-                setTimeout(next, 2500); // Интервал между сменой текста
+                setTimeout(next, 1000); // Интервал между сменой текста
             });
             counter = (counter + 1) % skills.length;
         };
@@ -573,7 +622,7 @@ function initCountersAnimation() {
                 const prefix = originalText.substring(0, targetMatch.index);
                 const suffix = originalText.substring(targetMatch.index + targetMatch[0].length);
                 
-                const duration = 2000; // Длительность анимации в мс
+                const duration = 1000; // Длительность анимации в мс
                 let startTime = null;
 
                 const animate = (timestamp) => {

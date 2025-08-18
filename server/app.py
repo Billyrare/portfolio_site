@@ -62,6 +62,11 @@ def projects_json():
     """Отдает статический файл projects.json"""
     return send_from_directory(parent_dir, 'projects.json')
 
+@app.route('/resume.pdf')
+def resume_pdf():
+    """Отдает файл резюме для скачивания"""
+    return send_from_directory(parent_dir, 'resume.pdf')
+
 @app.route('/images/<path:filename>')
 def serve_image(filename):
     """Отдает статические файлы из папки images"""
