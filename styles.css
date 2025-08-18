@@ -2382,3 +2382,8 @@ html, body {
         filter: blur(0.4px);
     }
 }
+
+/* Центрирование заголовка "Избранные проекты" */
+.projects .container {
+    text-align: center;
+}

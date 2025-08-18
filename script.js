@@ -4,6 +4,41 @@ let particles = [];
 let animationId;
 let isDarkTheme = false;
 
+// Плавное появление контента при загрузке
+function initSmoothAppearance() {
+    // Скрываем весь контент изначально
+    const header = document.querySelector('.header');
+    const sections = document.querySelectorAll('section');
+    
+    if (header) {
+        header.style.opacity = '0';
+        header.style.transform = 'translateY(-20px)';
+        header.style.transition = 'opacity 1s ease, transform 1s ease';
+    }
+    
+    sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    });
+    
+    // Показываем header
+    setTimeout(() => {
+        if (header) {
+            header.style.opacity = '1';
+            header.style.transform = 'translateY(0)';
+        }
+    }, 100);
+    
+    // Показываем секции по очереди
+    sections.forEach((section, index) => {
+        setTimeout(() => {
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }, 300 + index * 200); // Начинаем с 300ms, каждая секция +200ms
+    });
+}
+
 // Класс частицы с хаотичным движением
 class Particle {
     constructor(x, y, isDark) {
@@ -307,6 +342,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Инициализируем canvas с частицами
     initParticlesCanvas();
+    
+    // Плавное появление контента
+    initSmoothAppearance();
     
     // Инициализация всех функций
     initRevealOnScroll();
