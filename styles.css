@@ -2362,18 +2362,25 @@ html, body {
 }
 
 @media (max-width: 480px) {
+    .theme-toggle {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+    }
+
     .resume-download {
-        bottom: 1rem;
-        right: 1rem;
-        width: 4rem;
-        height: 4rem;
-        font-size: 1.6rem;
+        bottom: 6rem; /* 1.5rem (отступ) + 3.5rem (высота нижней) + 1rem (зазор) */
+        right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
     }
     
     .resume-download::after {
-        left: -4.5rem;
-        font-size: 0.9rem;
-        padding: 0.4rem 0.7rem;
+        /* Скрываем текстовую подсказку на очень маленьких экранах, чтобы избежать проблем с макетом */
+        display: none;
     }
 }
 

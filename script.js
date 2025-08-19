@@ -164,6 +164,16 @@ class Particle {
 
 // Инициализация canvas с частицами
 function initParticlesCanvas() {
+    // Отключаем сложную анимацию на мобильных для производительности
+    if (window.innerWidth <= 768) {
+        const canvas = document.getElementById('particles-canvas');
+        if (canvas) {
+            // Можно просто скрыть canvas, чтобы он не занимал место и не мешал
+            canvas.style.display = 'none';
+        }
+        return; // Прерываем выполнение функции, чтобы не создавать частицы
+    }
+
     particlesCanvas = document.getElementById('particles-canvas');
     if (!particlesCanvas) return;
     
@@ -360,7 +370,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initCodeRain();
     initTextScramble();
     initThemeToggle();
-    initParticleCanvas();
     initResumeDownload();
 });
 
