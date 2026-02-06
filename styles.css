@@ -1,0 +1,2426 @@
+:root {
+    /* Светлая тема (по умолчанию) */
+    --primary-bg: #f8f5f0;
+    --secondary-bg: #ffffff;
+    --soft-white: #f1ede5;
+    --text-color: #3c3630;
+    --light-text: #7a6f65;
+    --accent-color: #a89885;
+    --border-color: rgba(60, 54, 48, 0.1);
+    --soft-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --button-bg: #3c3630;
+    --button-text: #f8f5f0;
+    --card-bg: #ffffff;
+    --input-bg: #f1ede5;
+    --input-border: rgba(60, 54, 48, 0.2);
+    --grid-color: rgba(60, 54, 48, 0.12); /* Сделали сетку чуть заметнее */
+    --glow-color: rgba(168, 152, 133, 0.3);
+    
+    /* Glassmorphism эффекты */
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-bg-dark: rgba(248, 245, 240, 0.7);
+    --glass-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.7);
+    --glass-blur: 12px;
+    
+    /* Анимация переключения */
+    --transition-speed: 1s; /* Более медленный и плавный переход */
+    
+    /* Тени */
+    --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+    --primary-bg: #121212;
+    --secondary-bg: #1e1e1e;
+    --soft-white: #1a1a1a;
+    --text-color: #e0dacf;
+    --light-text: #a89d92;
+    --accent-color: #d9bf9f;
+    --border-color: rgba(217, 191, 159, 0.2);
+    --soft-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    --button-bg: #d9bf9f;
+    --button-text: #121212;
+    --card-bg: #1e1e1e;
+    --input-bg: #252525;
+    --input-border: rgba(217, 191, 159, 0.3);
+    --grid-color: rgba(217, 191, 159, 0.07); /* Сделали сетку чуть заметнее */
+    --glow-color: rgba(217, 191, 159, 0.25);
+    
+    /* Glassmorphism эффекты для темной темы */
+    --glass-bg: rgba(255, 255, 255, 0.07);
+    --glass-bg-dark: rgba(20, 20, 20, 0.3);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.5s cubic-bezier(0.25, 0.4, 0.45, 1); /* Глобальный переход сделан медленнее */
+}
+
+body {
+    font-family: 'Times New Roman', serif;
+    background: var(--primary-bg); /* Устанавливаем основной фон для всех страниц */
+    overflow-x: hidden;
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: background var(--transition-speed) ease, 
+                color var(--transition-speed) ease;
+}
+
+
+
+/* Типографика */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    font-family: 'Questrial', 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+    font-size: 4.8rem; /* Увеличен размер */
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    font-weight: 200;
+}
+
+h2 {
+    font-size: 3.2rem; /* Увеличен размер */
+    margin-bottom: 2rem;
+}
+
+h3 {
+    font-size: 1.7rem; /* Увеличен размер */
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+p {
+    margin-bottom: 1.5rem;
+    color: var(--text-color); /* Улучшаем контраст */
+    font-weight: 400;
+    font-size: 2.0rem; /* Увеличен размер основного текста */
+    line-height: 1.8; /* Увеличен межстрочный интервал */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Основной контейнер */
+.container {
+    width: 100%;
+    /* Убираем ограничение по ширине, чтобы блоки занимали всю ширину экрана */
+    padding: 0 2rem; /* Добавляем боковые отступы, чтобы контент не прилипал к краям */
+    box-sizing: border-box;
+}
+
+/* Хедер и навигация */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent;
+    border-bottom: none;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.header.scrolled {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-bottom: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+.nav-container {
+    width: 90%;
+    max-width: 1400px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 2rem;
+}
+
+/* Удаляем неиспользуемые стили логотипа */
+.logo-container,
+.logo,
+.logo img,
+.header.scrolled .logo img {
+    display: none;
+}
+
+.nav-left {
+    margin-right: auto;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.nav-links a {
+    font-size: 1rem; /* Увеличен размер */
+    letter-spacing: 1px;
+    color: var(--light-text);
+    padding: 0.5rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Questrial', sans-serif;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover, 
+.nav-links a.active {
+    color: var(--text-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.social-links a {
+    color: var(--light-text);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--text-color);
+}
+
+.mobile-menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Стили для мобильного меню */
+.mobile-menu-close {
+    display: none; /* Скрываем кнопку закрытия по умолчанию */
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2.5rem;
+    color: var(--text-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Основное содержимое */
+.main-content {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 0;
+    position: relative; /* Создаем новый контекст наложения */
+    z-index: 10;        /* Устанавливаем z-index выше, чем у фона */
+}
+
+.home-image {
+    display: none; /* Убираем место для картинок */
+}
+
+/* Проекты - новый стиль без изображений */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+/* Добавляем отступ для секции проектов, чтобы она была ниже */
+.projects {
+    margin-top: 15rem; /* Увеличил отступ, чтобы фон был лучше виден */
+}
+
+.project-item {
+    position: relative;
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    background: var(--glass-bg-dark);
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, background 0.4s ease-out;
+}
+
+.project-image {
+    display: none; /* Убираем место для картинок */
+}
+
+.project-info {
+    padding-top: 0;
+    flex-grow: 1; /* Позволяет блоку с информацией расти, отодвигая кнопку вниз */
+}
+
+.project-info h3 {
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.project-info h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+/* О себе - новый стиль без изображений */
+.about-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-content p {
+    font-family: 'Questrial', sans-serif; /* Меняем шрифт на более современный без засечек */
+    font-size: 1.4rem; /* Увеличен размер текста в секции "Обо мне" */
+    line-height: 1.9; /* Увеличен межстрочный интервал для лучшей читаемости */
+    max-width: 75ch; /* Ограничиваем длину строки для удобства чтения */
+    margin-left: auto; /* Центрируем текстовый блок, если он станет уже контейнера */
+    margin-right: auto;
+}
+
+.about-image {
+    display: none; /* Убираем место для картинок */
+}
+
+.stats {
+    display: flex; /* Меняем Grid на Flexbox */
+    justify-content: space-around; /* Равномерно распределяем блоки по всей ширине */
+    align-items: flex-start; /* Выравниваем блоки по верху */
+    gap: 2rem;
+    margin-top: 3rem;
+    background-color: var(--soft-white);
+    padding: 2rem;
+    border-radius: 3px;
+    border: 1px solid var(--border-color);
+}
+
+/* Услуги - новый стиль */
+.services-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.service-item {
+    position: relative;
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    background: var(--glass-bg-dark);
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, background 0.4s ease-out;
+}
+
+/* Контакт - новый стиль */
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+    gap: 3rem;
+}
+
+/* Кнопка в едином стиле */
+.button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    color: var(--text-color);
+    font-family: 'Questrial', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+.button:hover {
+    background: var(--accent-color);
+    color: var(--primary-bg);
+    border-color: transparent;
+    box-shadow: 0 10px 25px rgba(168, 152, 133, 0.3);
+    transform: translateY(-3px);
+}
+
+.button:hover::before {
+    left: 100%;
+}
+
+/* Заголовки - новый стиль */
+h2 {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+}
+
+h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+/* Индикатор прокрутки */
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.5rem;
+    height: 3rem;
+    border: 2px solid var(--accent-color);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.scroll-indicator:before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--accent-color);
+    border-radius: 50%;
+    animation: scrollDot 2s infinite;
+}
+
+@keyframes scrollDot {
+    0% { transform: translateY(-100%); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
+}
+
+/* Акцентные формы */
+.accent-shape {
+    position: absolute;
+    z-index: -1;
+    opacity: 0.1;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    border: 1px solid var(--text-color);
+    bottom: 10%;
+    left: 5%;
+    transform: rotate(45deg);
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    border: 1px solid var(--text-color);
+    top: 20%;
+    right: 10%;
+    transform: rotate(30deg);
+}
+
+.shape-line {
+    width: 80%;
+    height: 1px;
+    background-color: var(--border-color);
+    bottom: 10%;
+    left: 10%;
+}
+
+/* Проекты */
+.project-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: 'Questrial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    position: relative;
+}
+
+.project-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--text-color);
+    transition: width 0.3s ease;
+}
+
+.project-link:hover::after {
+    width: 100%;
+}
+
+/* О себе */
+.stat-item h3 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+}
+
+/* Иконки технологий в секции "Обо мне" */
+.tech-icons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Возвращаем выравнивание по левому краю, как было */
+    gap: 1.5rem;
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-top: 0.5rem;
+}
+
+.tech-icons i, .tech-icons .cpp-icon {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.tech-icons i:hover, .tech-icons .cpp-icon:hover {
+    color: var(--accent-color);
+    transform: translateY(-3px);
+}
+
+.cpp-icon {
+    font-family: 'Questrial', sans-serif;
+    font-weight: 600;
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+/* Услуги */
+.services-intro {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.service-number {
+    font-size: 0.9rem;
+    margin-right: 1rem;
+    color: var(--accent-color);
+}
+
+.service-item h3 {
+    font-size: 1.6rem; /* Увеличен размер */
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Контакт */
+.contact-content h2 {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2.5rem;
+}
+
+.contact-content h2::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+.contact-details {
+    margin: 3rem 0;
+}
+
+.contact-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.contact-item:hover {
+    transform: translateX(5px);
+}
+
+.contact-item i {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+.contact-item p {
+    margin-bottom: 0;
+}
+
+.contact-socials {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.contact-socials a {
+    color: var(--light-text);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: rgba(168, 152, 133, 0.05);
+}
+
+.contact-socials a:hover {
+    color: var(--accent-color);
+    background-color: rgba(168, 152, 133, 0.1);
+    transform: translateY(-3px);
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    margin-top: 1rem;
+}
+
+.form-group label {
+    font-family: 'Questrial', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--light-text);
+    transition: color 0.3s ease, transform 0.3s ease;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    pointer-events: none;
+    transform-origin: left;
+}
+
+.form-group input:focus ~ label,
+.form-group textarea:focus ~ label,
+.form-group input:not(:placeholder-shown) ~ label,
+.form-group textarea:not(:placeholder-shown) ~ label {
+    transform: translateY(-150%) scale(0.9);
+    color: var(--accent-color);
+    background-color: var(--soft-white);
+    padding: 0 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 1.2rem 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--glass-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--text-color);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    resize: none;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    box-shadow: var(--glass-shadow);
+}
+
+.form-group textarea {
+    min-height: 150px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(168, 152, 133, 0.2);
+    background: var(--glass-bg-dark);
+}
+
+.submit-button {
+    padding: 1rem 2rem;
+    border: 1px solid var(--border-color);
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: var(--text-color);
+    font-family: 'Questrial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+.submit-button:hover {
+    background: var(--accent-color);
+    color: var(--primary-bg);
+    border-color: transparent;
+    box-shadow: 0 10px 25px rgba(168, 152, 133, 0.3);
+    transform: translateY(-3px);
+}
+
+.submit-button:hover::before {
+    left: 100%;
+}
+
+.submit-button.success {
+    background-color: #a3c1ad;
+    border-color: #a3c1ad;
+    color: var(--soft-white);
+}
+
+/* Уведомления */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 2rem;
+    background-color: var(--text-color);
+    color: var(--soft-white);
+    font-family: 'Questrial', sans-serif;
+    border-radius: 3px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    background-color: #a3c1ad;
+}
+
+.notification.error {
+    background-color: #e7a8a8;
+}
+
+/* Футер */
+footer {
+    padding: 3rem 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-top: var(--glass-border);
+    position: relative; /* Устанавливаем позиционирование для z-index */
+    z-index: 10;        /* Устанавливаем z-index выше, чем у фона */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-text {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-socials a {
+    color: var(--light-text);
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-socials a:hover {
+    color: var(--accent-color);
+    transform: translateY(-3px);
+}
+
+/* Анимации */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Курсор */
+.cursor, .cursor-dot {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    will-change: transform;
+    transition: opacity 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.cursor {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--text-color);
+    border-radius: 50%;
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.cursor-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--text-color);
+    border-radius: 50%;
+    transition: transform 0.1s ease-out;
+}
+
+body:hover .cursor,
+body:hover .cursor-dot {
+    opacity: 1;
+}
+
+.cursor.hover {
+    transform: translate(-50%, -50%) scale(1.5) !important;
+    background-color: rgba(60, 54, 48, 0.1);
+    border-color: transparent;
+}
+
+.cursor-dot.hover {
+    transform: translate(-50%, -50%) scale(0) !important;
+}
+
+/* Скрываем системный курсор на устройствах, где работает кастомный курсор */
+@media (min-width: 993px) {
+    html,
+    body,
+    a,
+    button,
+    input,
+    textarea {
+        cursor: none;
+    }
+}
+
+/* Медиа-запросы */
+@media (max-width: 1200px) {
+    h1 {
+        font-size: 3.5rem;
+    }
+    
+    h2 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .nav-links {
+        gap: 1.5rem;
+    }
+    
+    section {
+        padding: 5rem 0;
+        min-height: auto; /* Позволяем контенту определять высоту на мобильных */
+    }
+    
+    .home-content,
+    .about-content,
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .home-image,
+    .about-image {
+        height: 50vh;
+    }
+    
+    .stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .home-content .home-image {
+        order: -1;
+    }
+    
+    .about-content .about-image {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--primary-bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        transform: translateY(-100%);
+        transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        z-index: 1001;
+        display: flex; /* Убедимся, что flex работает */
+    }
+    
+    .logo-container {
+        position: relative;
+        left: 0;
+        transform: none;
+    }
+    
+    .nav-container {
+        justify-content: space-between;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .nav-links.active {
+        transform: translateY(0);
+    }
+
+    .nav-links.active .mobile-menu-close {
+        display: block;
+    }
+
+    .nav-links.active a {
+        font-size: 1.8rem;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInLink 0.5s ease forwards;
+    }
+
+    .nav-links.active li:nth-child(2) a { animation-delay: 0.1s; }
+    .nav-links.active li:nth-child(3) a { animation-delay: 0.2s; }
+    .nav-links.active li:nth-child(4) a { animation-delay: 0.3s; }
+    .nav-links.active li:nth-child(5) a { animation-delay: 0.4s; }
+    .nav-links.active li:nth-child(6) a { animation-delay: 0.5s; }
+    
+    .social-links {
+        display: none;
+    }
+    
+    h1 {
+        font-size: 2.8rem;
+    }
+    
+    h2 {
+        font-size: 2.2rem;
+    }
+
+    .text-glitch {
+        font-size: 1.8rem;
+        min-height: 60px;
+    }
+
+    p {
+        font-size: 1.7rem; /* Промежуточный размер шрифта для планшетов */
+        line-height: 1.7;
+    }
+    
+    .stats {
+        flex-direction: column; /* Ставим элементы вертикально */
+        align-items: center; /* Центрируем их по горизонтали */
+        gap: 3rem;
+    }
+
+    /* Центрируем контент в блоках статистики на мобильных */
+    .stat-item {
+        text-align: center;
+    }
+    .tech-icons {
+        justify-content: center;
+    }
+    
+    .services-list,
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Уменьшаем отступы на страницах проектов для мобильных устройств */
+    .project-detail-container {
+        padding: 2rem 1.5rem;
+        margin-top: 90px; /* Добавляем отступ от хедера */
+    }
+
+    .project-detail-container h1 {
+        font-size: 2.2rem;
+    }
+    .project-detail-container h2 {
+        font-size: 1.8rem;
+    }
+    .project-detail-container p, .project-detail-container li {
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+}
+
+/* Анимация для ссылок в мобильном меню */
+@keyframes fadeInLink {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+    
+    p {
+        font-size: 1.1rem; /* Сделаем базовый текст чуть крупнее */
+    }
+
+    .text-glitch {
+        font-size: 1.5rem;
+        min-height: 50px;
+        justify-content: center; /* Центрируем текст на маленьких экранах */
+    }
+
+    .main-content {
+        margin-top: 0; /* Убираем отступ, секции имеют свой padding */
+    }
+
+    .project-detail-container {
+        padding: 1.5rem 1rem;
+    }
+    .project-detail-container h1 {
+        font-size: 1.9rem;
+    }
+    .project-detail-container h2 {
+        font-size: 1.5rem;
+    }
+    
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .footer-socials {
+        flex-direction: row; /* Возвращаем горизонтальное расположение */
+        gap: 1.5rem;
+    }
+}
+
+/* Векторные элементы и геометрические фигуры - облегченная версия */
+.vector-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--secondary-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Стили для главной секции - упрощенные */
+.home-vector {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--secondary-bg), var(--soft-white));
+}
+
+.home-vector .circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--accent-color);
+    opacity: 0.5;
+}
+
+.home-vector .circle-1 {
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+}
+
+.home-vector .circle-2 {
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+}
+
+.home-vector .line {
+    position: absolute;
+    background-color: var(--accent-color);
+    opacity: 0.2;
+}
+
+.home-vector .line-1 {
+    width: 70%;
+    height: 1px;
+    top: 50%;
+    left: 15%;
+    transform: rotate(45deg);
+}
+
+.home-vector .line-2 {
+    width: 70%;
+    height: 1px;
+    top: 50%;
+    left: 15%;
+    transform: rotate(-45deg);
+}
+
+/* Стили для проектов - упрощенные */
+.project-vector {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-bg);
+}
+
+.project-vector .shape {
+    position: absolute;
+    background-color: var(--accent-color);
+    opacity: 0.15;
+    transition: opacity 0.3s ease;
+}
+
+.project-item:hover .project-vector .shape {
+    opacity: 0.3;
+}
+
+.project-vector-1 .shape {
+    /* Упрощенная форма для проекта 1 */
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 70%, 70% 100%, 45% 70%, 0 70%);
+}
+
+.project-vector-2 .shape {
+    /* Упрощенный круг для проекта 2 */
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    top: 20%;
+    left: 20%;
+}
+
+.project-vector-3 .shape {
+    /* Упрощенный ромб для проекта 3 */
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+/* Стили для секции "Обо мне" - упрощенные */
+.about-vector {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--secondary-bg);
+}
+
+.about-vector .triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    opacity: 0.2;
+}
+
+.about-vector .triangle-1 {
+    border-width: 0 50px 90px 50px;
+    border-color: transparent transparent var(--accent-color) transparent;
+    top: 30%;
+    left: 30%;
+}
+
+.about-vector .triangle-2 {
+    border-width: 90px 50px 0 50px;
+    border-color: var(--secondary-accent) transparent transparent transparent;
+    bottom: 30%;
+    right: 30%;
+    opacity: 0.15;
+}
+
+.about-vector .square {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--accent-color);
+    opacity: 0.2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Упрощенные анимации с меньшей нагрузкой */
+@keyframes simple-rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Применяем базовые анимации только к нескольким элементам */
+.home-vector .circle-1 {
+    animation: simple-rotate 30s linear infinite;
+}
+
+.project-vector .shape {
+    transition: opacity 0.3s ease;
+}
+
+/* Добавление стилей для секций */
+section {
+    padding: 13rem 0;
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+section:nth-child(odd) {
+    background-color: var(--primary-bg);
+}
+
+section:nth-child(even) {
+    background-color: var(--soft-white);
+}
+
+/* Стили для заголовков по всему сайту */
+h1 {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 1rem;
+}
+
+h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+.button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    color: var(--text-color);
+    font-family: 'Questrial', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.button:hover {
+    background: var(--accent-color);
+    color: var(--primary-bg);
+    border-color: transparent;
+    box-shadow: 0 10px 25px rgba(168, 152, 133, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Улучшаем вид услуг */
+.services-intro {
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+}
+
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.service-item {
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    background: var(--glass-bg-dark);
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, background 0.4s ease-out;
+}
+
+.service-number {
+    font-size: 3rem;
+    color: var(--accent-color);
+    opacity: 0.2;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-family: 'Questrial', sans-serif;
+}
+
+.service-item h3 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+/* Контактная форма */
+.contact-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-form {
+    padding: 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    background: var(--glass-bg-dark);
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, background 0.4s ease-out;
+}
+
+/* Футер более современный */
+footer {
+    padding: 3rem 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-top: var(--glass-border);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Удаляем старые стили анимированного фона */
+
+/* Добавляем размытые цветовые блоки под стеклянными элементами */
+.color-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35; /* Сделали цветные пятна более заметными в светлой теме */
+    z-index: 1; /* Самый нижний слой эффектов */
+    pointer-events: none;
+}
+
+.blob-1 {
+    width: 350px;
+    height: 350px;
+    background-color: var(--accent-color);
+    top: 20%;
+    left: 25%;
+    animation: float 20s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+    width: 300px;
+    height: 300px;
+    background-color: #d4c8b8;
+    bottom: 30%;
+    right: 15%;
+    animation: float 15s ease-in-out infinite alternate-reverse;
+}
+
+.blob-3 {
+    width: 250px;
+    height: 250px;
+    background-color: #e2d9ce;
+    bottom: 10%;
+    left: 35%;
+    animation: float 18s ease-in-out infinite alternate;
+}
+
+/* Возвращаем прозрачность для темной темы, чтобы не было слишком ярко */
+[data-theme="dark"] .color-blob {
+    opacity: 0.25;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0px, 0px);
+    }
+    50% {
+        transform: translate(30px, 20px);
+    }
+    100% {
+        transform: translate(-20px, 40px);
+    }
+}
+
+/* Убираем фон у главной секции, чтобы был виден анимированный фон */
+.section.hero-section { /* Увеличиваем специфичность селектора, чтобы переопределить фон */
+    background-color: transparent;
+}
+
+/* Обновленные стили для hero секции (без контейнера) */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-content h1, .hero-content p {
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Улучшаем выделение имени */
+.hero-content .highlight {
+    position: relative;
+    display: inline-block;
+    color: var(--accent-color);
+    z-index: 1;
+}
+
+.hero-content .highlight::after {
+    content: "";
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    width: 100%;
+    height: 7px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    opacity: 0.2;
+    border-radius: 2px;
+    animation: pulse 3s infinite;
+}
+
+[data-theme="dark"] .hero-content .highlight::after {
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    height: 7px;
+    bottom: 6px;
+    opacity: 0.3;
+}
+
+/* Стилизованный скроллбар */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--glass-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-color);
+}
+
+/* Неоновые линии */
+.neon-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4; /* Над сеткой */
+    pointer-events: none;
+}
+
+.neon-line {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    height: 1px;
+    width: 100%;
+    animation: lightNeonPulse 5s infinite alternate;
+    transform-origin: center;
+}
+
+@keyframes lightNeonPulse {
+    0% { opacity: 0.2; box-shadow: 0 0 5px var(--glow-color); }
+    50% { opacity: 0.4; box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color); }
+    100% { opacity: 0.2; box-shadow: 0 0 5px var(--glow-color); }
+}
+
+/* Тех-круги */
+.tech-circles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4; /* Над сеткой */
+    pointer-events: none;
+}
+
+.tech-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--accent-color);
+    transform-origin: center;
+    animation: circlePulseLight 10s infinite alternate;
+}
+
+@keyframes circlePulseLight {
+    0% { transform: scale(0.9); opacity: 0.25; }
+    50% { transform: scale(1.05); opacity: 0.4; }
+    100% { transform: scale(0.95); opacity: 0.3; }
+}
+
+@keyframes circlePulseDark {
+    0% { transform: scale(0.9); opacity: 0.1; }
+    50% { transform: scale(1.05); opacity: 0.25; }
+    100% { transform: scale(0.95); opacity: 0.15; }
+}
+
+/* Добавление легкого свечения к фоновым элементам при наведении на секции */
+section:hover .animated-shape {
+    filter: blur(1px);
+    opacity: 0.35;
+    transition: all 0.3s ease;
+}
+
+section:hover .neon-line {
+    opacity: 0.35;
+    box-shadow: 0 0 10px var(--accent-color), 0 0 25px var(--accent-color);
+    transition: all 0.3s ease;
+}
+
+/* Анимация переключения темы */
+.header, .card, input, textarea, button, .project-item, .animated-shape, .neon-line, .tech-circle {
+    transition: all var(--transition-speed) ease;
+}
+
+/* Стилизация переключателя темы */
+.theme-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--glow-color);
+    z-index: 1001; /* Выше хедера */
+    border: none;
+    color: var(--primary-bg);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--glow-color);
+}
+
+.theme-toggle i {
+    transition: transform 0.5s ease;
+}
+
+[data-theme="dark"] .theme-toggle .fa-moon {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle .fa-sun {
+    display: inline-block;
+}
+
+.theme-toggle .fa-sun {
+    display: none;
+}
+
+.theme-toggle .fa-moon {
+    display: inline-block;
+}
+
+/* Уникальные эффекты для темной темы */
+[data-theme="dark"] .grid-overlay {
+    opacity: 0.5;
+}
+
+[data-theme="dark"] .neon-line {
+    animation: darkNeonPulse 5s infinite alternate;
+}
+
+[data-theme="dark"] .tech-circle {
+    animation-name: circlePulseDark;
+}
+
+@keyframes darkNeonPulse {
+    0% { opacity: 0.1; box-shadow: 0 0 8px var(--accent-color); }
+    50% { opacity: 0.4; box-shadow: 0 0 15px var(--accent-color), 0 0 30px var(--accent-color); }
+    100% { opacity: 0.1; box-shadow: 0 0 8px var(--accent-color); }
+}
+
+/* Анимация переключения темы */
+.theme-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 9998; /* Очень высокий z-index */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out; /* Более медленное затухание */
+}
+
+.theme-transition-overlay.active {
+    opacity: 1;
+    background-color: var(--primary-bg);
+}
+
+.hero-intro {
+    font-size: 1.8rem; /* Увеличен размер */
+    font-family: 'Questrial', sans-serif; /* Применяем тот же шрифт, что и у глитча */
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+    font-weight: 400; /* Делаем шрифт чуть жирнее для лучшей читаемости */
+    letter-spacing: 1px; /* Добавляем разрядку для стиля */
+}
+
+.text-glitch {
+    color: var(--accent-color);
+    font-family: 'Questrial', sans-serif;
+    font-size: 2.2rem; /* Увеличен размер шрифта */
+    font-weight: 400;
+    letter-spacing: 1px;
+    min-height: 80px; /* Увеличиваем высоту, чтобы избежать "прыжков" */
+    display: flex;
+    align-items: center;
+}
+
+.text-glitch .dud {
+    color: var(--light-text);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Стили для страниц с деталями проекта */
+.project-detail-container {
+    max-width: 900px;
+    margin: 120px auto 60px;
+    padding: 3rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+    color: var(--text-color);
+}
+.project-detail-container h1 {
+    font-size: 2.8rem; /* Увеличен размер */
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--accent-color);
+}
+.project-detail-container h2 {
+    font-size: 2rem; /* Увеличен размер */
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+.project-detail-container img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(217, 191, 159, 0.1);
+}
+.project-detail-container p,
+.project-detail-container li {
+    font-size: 1.3rem; /* Увеличен размер текста на страницах проектов */
+    line-height: 1.8; /* Увеличен межстрочный интервал */
+    max-width: 75ch; /* Ограничим длину строки для удобства чтения */
+    text-align: left; /* Убираем выравнивание по ширине для лучшей читаемости */
+}
+.back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-family: 'Questrial', sans-serif;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Стили для галереи скриншотов и сравнения изображений */
+.image-comparison, .screenshot-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+/* Уникальный макет для галереи экзопланет */
+.exoplanet-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+.exoplanet-gallery .featured {
+    grid-column: 1 / -1; /* Главное изображение занимает всю ширину строки */
+}
+
+.image-comparison div, .screenshot-item {
+    background-color: rgba(30, 30, 30, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    color: var(--light-text);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.screenshot-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+.screenshot-item img {
+    width: 100%;
+    height: 100%; /* Изображение заполняет всю высоту контейнера */
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-grow: 1; /* Позволяет изображению занимать доступное пространство */
+}
+.screenshot-item p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+.tech-list {
+    list-style-position: inside;
+    padding-left: 0;
+    text-align: left; /* Отменяем justify для списков */
+}
+/* Стили для блоков с кодом на страницах проектов */
+.project-detail-container pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto; /* Горизонтальный скролл для длинных строк */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem; /* Немного увеличен размер кода */
+    line-height: 1.6;
+    margin: 2rem 0;
+    color: #c5c8c6; /* Светло-серый для кода */
+}
+.project-detail-container code {
+    font-family: inherit;
+    color: inherit;
+}
+
+/* Стили для слайдера сравнения изображений */
+.slider-container {
+    margin: 1.5rem auto 2.5rem; /* Центрируем слайдер и добавляем отступы */
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--soft-shadow);
+    max-width: 90%; /* Ограничиваем максимальную ширину для больших экранов */
+    display: flex; /* Используем flex для центрирования */
+    justify-content: center;
+    align-items: center;
+    background-color: var(--glass-bg); /* Сделаем фон чуть заметным */
+}
+
+.slider-description {
+    text-align: center;
+    max-width: none; /* Снимаем ограничение по ширине для этого параграфа */
+}
+
+img-comparison-slider {
+    width: 100%; /* Слайдер должен занимать всю ширину контейнера */
+    --divider-width: 3px;
+    --divider-color: var(--accent-color);
+    --handle-size: 50px;
+    --handle-color: var(--accent-color);
+    --handle-background: var(--primary-bg);
+    --handle-opacity: 1;
+    --handle-border-width: 2px;
+    --handle-border-color: var(--accent-color);
+    --handle-shadow: 0 0 15px rgba(217, 191, 159, 0.5);
+    max-height: 70vh;
+    cursor: col-resize;
+}
+
+/* Делаем изображения внутри слайдера одинаковыми по размеру и ровными */
+img-comparison-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Масштабирует изображение с сохранением пропорций, обрезая лишнее */
+    aspect-ratio: 16 / 10; /* Задаем соотношение сторон, чтобы избежать "скачков" */
+    background-color: #000; /* Фон на случай, если изображение не загрузится */
+}
+
+.slider-label {
+    position: absolute;
+    top: 1rem;
+    background-color: rgba(18, 18, 18, 0.7);
+    backdrop-filter: blur(4px);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'Questrial', sans-serif;
+    font-size: 0.9rem;
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.slider-label[slot="first"] {
+    left: 1rem;
+}
+.slider-label[slot="second"] {
+    right: 1rem;
+}
+
+/* Стили для модального окна изображений */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+}
+.modal-content {
+    margin: auto;
+    display: block;
+    width: auto;
+    max-width: 90%;
+    max-height: 90vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.modal-content img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+}
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.close-button:hover,
+.close-button:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+/* --- Улучшения для мобильных устройств (320-375px) --- */
+@media (max-width: 375px) {
+  .container, .main-content, .projects-grid, .about-content, .contact-content, .footer-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  h1 {
+    font-size: 1.7rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  .button, .submit-button {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1rem;
+    padding: 1rem 1.2rem;
+  }
+  .nav-links.active a {
+    font-size: 1.2rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .footer-socials {
+    gap: 1rem;
+  }
+}
+
+/* --- Убираем горизонтальный скролл на всех устройствах --- */
+html, body {
+  overflow-x: hidden;
+}
+
+/* --- Плавная анимация для мобильного меню --- */
+@media (max-width: 768px) {
+  .nav-links {
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .nav-links.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* --- Комплексная адаптация и оптимизация --- */
+@media (max-width: 768px) {
+  .container, .main-content, .projects-grid, .about-content, .contact-content, .footer-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  .hero-content, .about-content, .services-content, .contact-content {
+    max-width: 100vw;
+  }
+  .projects-grid, .services-list {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+  }
+  .stats {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  .footer-socials {
+    gap: 1rem;
+  }
+  .animated-shape, .color-blob, .tech-circle {
+    max-width: 120px !important;
+    max-height: 120px !important;
+    width: 80px !important;
+    height: 80px !important;
+    opacity: 0.15 !important;
+    filter: blur(8px) !important;
+  }
+  .circle-shape, .arc-shape, .line-shape {
+    width: 80px !important;
+    height: 80px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+  }
+  .blob-1, .blob-2, .blob-3 {
+    width: 80px !important;
+    height: 80px !important;
+    top: 10% !important;
+    left: 10% !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+  .hero-content h1, h1 {
+    font-size: 1.5rem !important;
+  }
+  h2 {
+    font-size: 1.1rem !important;
+  }
+  .button, .submit-button {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1rem;
+    padding: 1rem 1.2rem;
+  }
+  .nav-links.active a {
+    font-size: 1.2rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  section {
+    padding: 2.5rem 0 !important;
+    min-height: unset !important;
+  }
+}
+
+/* --- Убираем горизонтальный скролл на всех устройствах --- */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+}
+
+/* --- Улучшение UX мобильного меню --- */
+@media (max-width: 768px) {
+  .nav-links {
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--primary-bg);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  .nav-links.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .mobile-menu-close {
+    display: block !important;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+  }
+}
+
+/* --- Отключаем тяжелые анимации и большие фигуры на мобильных --- */
+@media (max-width: 768px) {
+  .animated-shape, .color-blob, .tech-circle {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* --- Компактные и современные карточки для проектов и компетенций --- */
+.services-list, .projects-grid {
+  display: grid !important;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.services-list {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Адаптивные колонки: 2 на десктопе, 1 на мобильных */
+  grid-auto-rows: 1fr; /* Делает все карточки одинаковой высоты */
+  max-width: 850px;
+}
+
+.projects-grid {
+  grid-template-columns: repeat(4, 1fr); /* 4 колонки в ряд на десктопе */
+  max-width: 1400px; /* Увеличиваем макс. ширину для 4 карточек */
+  grid-auto-rows: 1fr; /* Делает карточки одинаковой высоты в многострочном режиме (на мобильных) */
+}
+
+@media (max-width: 992px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2x2 на планшетах и мобильных */
+  }
+}
+
+.project-item, .service-item {
+  background: var(--glass-bg);
+  border-radius: 16px; /* Немного увеличиваем скругление */
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  padding: 2rem; /* Увеличиваем внутренние отступы */
+  /* min-width и max-width больше не нужны, размер контролирует grid */
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.3s, transform 0.3s;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.project-item:hover, .service-item:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  transform: translateY(-6px) scale(1.03);
+  background: var(--glass-bg-dark);
+}
+
+.project-info h3, .service-item h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.7rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: left;
+}
+
+.project-info p, .service-item p {
+  font-size: 0.98rem;
+  color: var(--light-text);
+  margin-bottom: 0.7rem;
+  line-height: 1.5;
+}
+
+.project-link {
+  font-size: 0.95rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 6px;
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  margin-top: 1.5rem; /* Увеличиваем отступ, чтобы кнопка не прилипала к тексту */
+  text-align: center;
+  align-self: flex-end;
+  transition: background 0.2s, color 0.2s;
+}
+
+.project-link:hover {
+  background: var(--text-color);
+  color: var(--accent-color);
+}
+
+/* --- Кнопка скачивания резюме рядом с переключателем темы --- */
+.resume-download {
+    position: fixed;
+    bottom: 2rem;
+    right: 6rem;
+    width: 3rem;
+    height: 3rem;
+    background: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--glow-color);
+    z-index: 1001;
+    border: none;
+    color: var(--primary-bg);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resume-download:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--glow-color);
+}
+
+.resume-tooltip {
+    position: absolute;
+    right: 4rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    color: var(--text-color);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.resume-download:hover .resume-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* --- Мобильная адаптация для кнопки скачивания резюме --- */
+@media (max-width: 768px) {
+    .theme-toggle {
+        bottom: 1.5rem; /* Нижняя кнопка */
+        right: 1.5rem;
+        left: auto; /* Убираем привязку к левому краю */
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .resume-download {
+        bottom: 6rem; /* Верхняя кнопка (1.5rem отступ + 3.5rem высота нижней + 1rem зазор) */
+        right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .resume-tooltip {
+        display: none; /* Скрываем tooltip на мобильных */
+    }
+    
+    /* Добавляем текст рядом с иконкой на мобильных */
+    .resume-download::after {
+        content: 'Резюме';
+        position: absolute;
+        left: -4rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        color: var(--text-color);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .resume-download:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-toggle {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+    }
+
+    .resume-download {
+        bottom: 6rem; /* 1.5rem (отступ) + 3.5rem (высота нижней) + 1rem (зазор) */
+        right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.4rem;
+    }
+    
+    .resume-download::after {
+        /* Скрываем текстовую подсказку на очень маленьких экранах, чтобы избежать проблем с макетом */
+        display: none;
+    }
+}
+
+
+
+
+
+
+
+/* --- Canvas с анимированными частицами и физикой --- */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.6; /* Умеренная прозрачность */
+    filter: blur(0.2px); /* Лёгкое размытие для мягкости */
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    #particles-canvas {
+        /* На мобильных делаем менее заметным */
+        opacity: 0.4;
+        filter: blur(0.3px);
+    }
+}
+
+@media (max-width: 480px) {
+    #particles-canvas {
+        /* Ещё больше скрываем на маленьких экранах */
+        opacity: 0.3;
+        filter: blur(0.4px);
+    }
+}
+
+/* Центрирование заголовка "Избранные проекты" */
+.projects .container {
+    text-align: center;
+}

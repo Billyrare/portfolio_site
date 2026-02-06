@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проект | Поиск обитаемых экзопланет</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Скрипт для предотвращения "вспышки" при смене темы -->
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme) {
+                    document.documentElement.setAttribute('data-theme', theme);
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+</head>
+<body>
+    <!-- Курсор -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Навигационная панель -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="spacer"></div>
+            <ul class="nav-links">
+                <button class="mobile-menu-close" aria-label="Закрыть меню">&times;</button>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="index.html#projects">Проекты</a></li>
+                <li><a href="index.html#about">Обо мне</a></li>
+                <li><a href="index.html#services">Услуги</a></li>
+                <li><a href="index.html#contact">Контакт</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="Открыть меню">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="project-detail-container">
+        <h1>Поиск обитаемых экзопланет</h1>
+        
+        <p>
+            Это интеллектуальная система для анализа и выявления потенциально обитаемых экзопланет. 
+            Она использует методы машинного обучения для оценки планет на основе их физических характеристик.
+        </p>
+
+        <h2>Скриншоты</h2>
+        <div class="exoplanet-gallery">
+            <div class="screenshot-item featured">
+                <img src="images/main.png" alt="Главный интерфейс">
+                <p>Главный интерфейс</p>
+            </div>
+            <div class="screenshot-item">
+                <img src="images/finded_planet.png" alt="Результаты анализа">
+                <p>Результаты анализа</p>
+            </div>
+            <div class="screenshot-item">
+                <img src="images/graph.png" alt="Детальная аналитика">
+                <p>Детальная аналитика</p>
+            </div>
+            <div class="screenshot-item">
+                <img src="images/esi.png" alt="Визуализация данных">
+                <p>Визуализация данных</p>
+            </div>
+        </div>
+
+        <h2>Описание проекта</h2>
+        <p>
+            Система использует передовые методы машинного обучения для обработки данных из авторитетных источников, таких как NASA Exoplanet Archive и Planetary Habitability Laboratory.
+        </p>
+        <p>
+            Основная функциональность включает оценку планет по их физическим характеристикам (радиус, температура, плотность), моделирование состава атмосферы, анализ водного потенциала и общей пригодности для жизни. Взаимодействие с данными осуществляется через API, предоставляя доступ к каталогам подтвержденных экзопланет и потенциально обитаемых миров.
+        </p>
+
+        <h2>Ключевые технологии</h2>
+        <ul class="tech-list">
+            <li><b>Python:</b> Основной язык реализации.</li>
+            <li><b>Flask:</b> Веб-фреймворк для создания API и интерфейса.</li>
+            <li><b>Scikit-learn:</b> Для реализации моделей машинного обучения (KNN регрессор, Random Forest).</li>
+            <li><b>Pandas & NumPy:</b> Для обработки и анализа данных.</li>
+        </ul>
+
+        <a href="index.html" class="back-link">&larr; Вернуться на главную</a>
+    </div>
+
+    <!-- Модальное окно для изображений -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-button">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Modal Image">
+        </div>
+    </div>
+
+    <!-- Добавляем кнопку переключения темы -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Добавляем оверлей для анимации переключения -->
+    <div class="theme-transition-overlay" id="transition-overlay"></div>
+
+    <script src="script.js"></script>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2024 Ботир. Все права защищены.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/botiroff" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

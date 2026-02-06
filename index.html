@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billyrare</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    
+    <!-- Подключаем шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Questrial&display=swap" rel="stylesheet">
+    
+    <!-- Подключаем иконки -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Подключаем основной CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Скрипт для предотвращения "вспышки" при смене темы -->
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                // Если тема сохранена, используем ее. Иначе, по умолчанию темная.
+                if (theme) {
+                    document.documentElement.setAttribute('data-theme', theme);
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {
+                // localStorage может быть недоступен
+                console.warn('Не удалось применить тему из localStorage.', e);
+            }
+        })();
+    </script>
+</head>
+<body>
+    <!-- Canvas для анимированных частиц с физикой -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Добавляем кнопку переключения темы -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Добавляем кнопку скачивания резюме -->
+    <button class="resume-download" id="resume-download" aria-label="Скачать резюме">
+        <i class="fas fa-file-pdf"></i>
+        <span class="resume-tooltip">Скачать резюме</span>
+    </button>
+
+    <!-- Добавляем оверлей для анимации переключения -->
+    <div class="theme-transition-overlay" id="transition-overlay"></div>
+
+    <!-- Курсор -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- Горизонтальная навигация -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="spacer"></div>
+            <ul class="nav-links">
+                <button class="mobile-menu-close" aria-label="Закрыть меню">&times;</button>
+                <li><a href="#home" class="active">Главная</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#about">Обо мне</a></li>
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#contact">Контакт</a></li>
+            </ul>
+            
+            <button class="mobile-menu-toggle" aria-label="Открыть меню">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <!-- Главная секция -->
+        <section id="home" class="section hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Привет, я <span class="highlight">Ботир</span></h1>
+                    <p class="hero-intro">Инженер-программист с опытом работы в:</p>
+                    <p id="skills-text" class="subtitle text-glitch"></p>
+                    <a href="#contact" class="button">Связаться со мной</a>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator" aria-hidden="true"></div>
+        </section>
+
+        <!-- Проекты секция -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 class="reveal">Избранные проекты</h2>
+                <div class="projects-grid">
+                    <!-- Проекты будут загружены сюда динамически -->
+                </div>
+            </div>
+            <div class="accent-shape shape-line"></div>
+        </section>
+
+        <!-- Обо мне секция -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text reveal">
+                        <h2>Обо мне</h2>
+                        <p>Я — инженер-программист с глубоким интересом к архитектуре данных и системам управления базами данных. Меня увлекает процесс проектирования, оптимизации и управления потоками информации, которые лежат в основе любого современного приложения. Я убежден, что надежная и грамотно спроектированная база данных — это фундамент для масштабируемых и эффективных программных решений.</p>
+                        <p>Мой практический опыт включает работу с различными типами баз данных: от реляционных (SQL, PostgreSQL) до графовых (Neo4j). Наряду с этим, я активно применяю навыки в машинном обучении для анализа данных, включая разработку рекуррентных сетей (LSTM) для прогнозирования и моделей компьютерного зрения для распознавания образов. Этот комплексный подход позволяет мне создавать полноценные интеллектуальные системы от уровня хранения данных до реализации сложной бизнес-логики.</p>
+                        
+                        <div class="stats">
+                            <div class="stat-item reveal">
+                                <p>Опыт</p>
+                                <h3 class="counter">3+ года</h3>
+                            </div>
+                            <div class="stat-item reveal">
+                                <p>Завершенные проекты</p>
+                                <h3 class="counter">15+</h3>
+                            </div>
+                            <div class="stat-item reveal">
+                                <p>Ключевые технологии</p>
+                                <div class="tech-icons">
+                                    <i class="fas fa-database" title="SQL"></i>
+                                    <i class="fab fa-python" title="Python"></i>
+                                    <span class="cpp-icon" title="C++">C++</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accent-shape shape-2"></div>
+        </section>
+
+        <!-- Услуги секция - обновленная -->
+        <section id="services" class="services">
+            <div class="container">
+                <div class="services-content">
+                    <div class="services-intro reveal">
+                        <h2>Компетенции</h2>
+                        <p>Я предлагаю экспертизу в ключевых областях машинного обучения и разработки программного обеспечения, направленную на создание интеллектуальных и масштабируемых решений.</p>
+                    </div>
+
+                    <div class="services-list">
+                        <div class="service-item reveal">
+                            <span class="service-number">01</span>
+                            <h3>Разработка ML-моделей</h3>
+                            <p>Создание и внедрение кастомных моделей машинного обучения для решения задач классификации, регрессии и кластеризации.</p>
+                        </div>
+
+                        <div class="service-item reveal">
+                            <span class="service-number">02</span>
+                            <h3>Анализ данных и прогнозирование</h3>
+                            <p>Глубокий анализ данных для выявления скрытых закономерностей и построение моделей для прогнозирования временных рядов.</p>
+                        </div>
+
+                        <div class="service-item reveal">
+                            <span class="service-number">03</span>
+                            <h3>Компьютерное зрение</h3>
+                            <p>Разработка систем для обработки и анализа изображений, включая распознавание, сегментацию и сжатие данных.</p>
+                        </div>
+
+                        <div class="service-item reveal">
+                            <span class="service-number">04</span>
+                            <h3>Прототипирование AI-решений</h3>
+                            <p>Быстрая разработка и тестирование прототипов интеллектуальных систем для проверки гипотез и демонстрации концепций.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакт секция - обновленная -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-content">
+                    <div class="contact-info reveal">
+                        <h2>Свяжитесь со мной</h2>
+                        <p>Если вас заинтересовало сотрудничество или у вас есть вопросы, не стесняйтесь связаться со мной любым удобным способом.</p>
+                        
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <p>isamiddinovb@gmail.com</p>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <p>+998 97 751 76 71</p>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>Ташкент, Узбекистан</p>
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="contact-socials">
+                            <a href="https://github.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                            <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div> -->
+                    </div>
+
+                    <form class="contact-form reveal">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder=" " required>
+                            <label for="name">Имя</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder=" " required>
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" placeholder=" ">
+                            <label for="subject">Тема</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" placeholder=" " required></textarea>
+                            <label for="message">Сообщение</label>
+                        </div>
+                        <button type="submit" class="button">Отправить сообщение</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2024 Все права защищены.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://t.me/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://instagram.com/billyrare" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
